@@ -15,7 +15,7 @@ params = {
 # 4. 헤더 정보
 headers = {
     "Authorization": "Bearer nv-bf23d32f4c3e41dea18865abcc2f2e4f75WU",  # 실제 API 키 입력
-    "X-NCP-CLOVASTUDIO-REQUEST-ID": str(uuid.uuid4())
+    "X-NCP-CLOVASTUDIO-REQUEST-ID": '1'
 }
 
 # 5. GET 요청 보내기
@@ -23,7 +23,7 @@ response = requests.get(url, params=params, headers=headers)
 
 # 6. 결과 출력
 if response.status_code == 200:
-    print("✅ 응답:", response.json())
+    print("✅ 응답:", response.json()['message'])
 else:
     print("❌ 에러 발생:", response.status_code)
     print(response.text)
