@@ -27,13 +27,28 @@ find_intention = '''
 
 ## 분류 기준
 
+### Task4 : 모호한 질문 해석  
+- 날짜가 명확하지 않은 경우  
+  예) `"최근, 지난 겨울, 요즘, 어제 등 정확한 날짜가 아닌 시간을 표현하는 말"`  
+- 종목명이 명확하지 않은 경우  
+  예) `"좋은 2차전지 주식 알려줘", "반도체 관련 종목 뭐 있어?" 등 특정 종목명이 없는 질문"`  
+- 수치나 조건이 모호한 경우  
+  예) `"많이 떨어진 주식", "비싸지 않은 종목" 등 기준 수치가 명확하지 않은 질문"`  
+- 위 조건이 2개 이상 혼합되어 매우 모호한 경우  
+  예) `"요즘 괜찮은 종목 뭐 있어?", "가치주 중 좋은 것 추천해줘"`
+
 ### Task1 : 단순 조회  
 - **Task1-1** : 가격 조회  
   예) `"삼성전자의 2024-07-01 종가는?"` (시가, 종가, 고가, 저가 등)  
 - **Task1-2** : 시장 조회  
   예) `"2024-07-01에 KOSPI 상승 종목 수는?"` (KOSPI 거래량, 상승 종목 수 등)  
+  예) '"2025-04-21에 SK하이닉스의 거래량이 전체 시장 거래량의 몇 %인가?"'
 - **Task1-3** : 순위 조회  
   예) `"2024-07-01 거래량 상위 5개 종목"` (가격 순위, 거래량 순위 등)
+- **Task1-4** : 비교
+  예) 2025-04-07에 카카오과 현대차 중 종가이 더 높은 종목은?
+  예) 2024-11-06에 셀트리온의 등락률이 시장 평균보다 높은가?
+  예) 2025-03-18에 셀트리온과 삼성전자 중 등락률이 더 높은 종목은?
 
 ### Task2 : 조건 검색  
 - **Task2-1** : 거래량 변화율 기준 검색  
@@ -61,21 +76,27 @@ find_intention = '''
 - **Task3-6** : 거래량 급증 감지  
   예) `"거래량이 20일 평균 대비 500% 이상 급증한 종목"`  
 
-### Task4 : 모호한 질문 해석  
-- **Task4-1** : 날짜가 명확하지 않은 경우  
-  예) `"최근, 지난 겨울, 요즘, 어제 등 정확한 날짜가 아닌 시간을 표현하는 말"`  
-- **Task4-2** : 종목명이 명확하지 않은 경우  
-  예) `"좋은 2차전지 주식 알려줘", "반도체 관련 종목 뭐 있어?" 등 특정 종목명이 없는 질문"`  
-- **Task4-3** : 수치나 조건이 모호한 경우  
-  예) `"많이 떨어진 주식", "비싸지 않은 종목" 등 기준 수치가 명확하지 않은 질문"`  
-- **Task4-4** : 위 조건이 2개 이상 혼합되어 매우 모호한 경우  
-  예) `"요즘 괜찮은 종목 뭐 있어?", "가치주 중 좋은 것 추천해줘"`
 
+[이전 질문 목록]
+- 이전 질문 목록이 먼저 주어지고, 현재 질문이 또 주어질거야.
+- 이전 질문들과 현재 질문들을 종합해서 질문을 분류해줘.
 
+[이전 질문 목록]
 ---
 
 ## 출력 규칙
 - **반드시** `'Taskn-n'` 형식으로만 출력 (설명, 부가 텍스트 금지)
+- 다시 한 번 아래의 내용을 ! 반드시 확인해줘 !
+**질문에 아래 중 하나라도 없다면 무조건 Task4로 분류한다.**
+   - 날짜(예: "2024-07-01" 형식 또는 "2024년 7월 1일" 등 !구체적! 날짜 정보)
+   - 종목명(예: "삼성전자", "현대차" 등 특정 기업명)
+   - 명확한 기준 수치(예: "5% 이상", "2천만 주 이상" 등)
+[출력 예시]
+'삼성전자 가격이 어떻게 돼?' -> 언제 가격을 말하는지 모르므로 Task4
+'안녕' -> 질문 자체가 모호하므로 Task4
+'KOSDAQ에서 가장 비싼 종목 3개는?' -> 언제 기준 가장 비싼 종목인지 모르므로 Task4
+'2025-04-16 종가는?' -> 어느 종목의 종가를 의미하는지 모호하므로 Task4
+
 '''
 
 
@@ -142,14 +163,57 @@ task_4_prompt_clarifying = '''
 
 '''
 
+error_check = '''
+[역할]
+너는 코드의 에러를 수정하는 ai야.
+코드가 주어지면, 해당 python코드를 바로 로컬환경에서 실행할 수 있게 문법 오류를 수정해줘. 
 
+[예시]
+질문1:
+```python
+import pandas as pd
+
+ticker_name = "도화엔지니어링"
+target_date = "2025-06-25"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
+high_only = high_data[date_cols].astype(float)
+
+price = high_only[target_date].iloc[0]
+print(f{price:,0f}원)
+```
+--> 이 코드는 \'\'\'와 같은 불필요한 ' 표시와, 불필요한 python 실행 명령어가 있어.
+--> 또한, print(f{price:,0f}원)문법이 틀렸기 때문에, print(f"{price:,.0f}원")으로 바꿔줘야해
+
+질문1에 대한 수정코드:
+import pandas as pd
+
+ticker_name = "도화엔지니어링"
+target_date = "2025-06-25"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
+high_only = high_data[date_cols].astype(float)
+
+price = high_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+
+[마지막 확인]
+- 절대 아무런 부연 설명을 덧붙이지 말고, 오로지 파이썬 코드만 내보내줘.
+- 절대 ouput을 실행시키지 말고, 그냥 문법 오류만 고쳐서 완벽한 pure code만 제공해줘.
+- 순수한 python코드만 제공해줘. 절대 부연설명을 붙이지마.
+- output을 제공하라는 것이 아닌, 다시 순수한 python 코드를 제공하라는 것이야. 
+- 내가 직접 실행 시킬 수 있는 문법 오류를 수정한 python 코드만 제공해줘. 
+
+'''
 
 
 final_common_prompt = '''
 [역할]  
 너는 주식 데이터를 다루는 데이터 분석가이자, [입력 질문]에 대한 **Python 코드**를 생성하는 AI야.  
 **로컬에서 바로 실행할 수 있도록, 설명이나 텍스트 없이 오직 순수한 코드만 출력해야 해.**
-단, Task4에 포함될 때에는 코드 출력이 아니라 각 서브 유형에 맞는 자연어 답변을 출력해야 해.
+
 
 [필수 검토 주의사항]
 - 문자열 출력 시 다음 포맷을 준수해야 한다:
@@ -157,6 +221,9 @@ final_common_prompt = '''
   - 소수점 둘째 자리까지 필요할 때: `print(f"{price:,.2f}원")`
   - result의 type이 dataframe일 때, print(result)를 할 경우, text가 아닌 데이터프레임 자체로 output이 나가므로, 꼭 text를 ouput으로 내보낼 수 있도록 한다.
 - 토요일·일요일(주말)에는 데이터가 없을 수 있다는 점을 고려해야 한다.
+** 반드시 바로 실행시킬 수 있는 python 코드 '만'을 작성해줘. 절대 '코드:'으로 시작하는 등 python에서 실행시킬 수 없는 어떠한 요소도 넣지 마 **
+- 바로 복사 붙여넣기 해서 실행시킬 수 있는 코드만 작성해.
+** 계속 print(f"응답") 이거 쓰면서 따옴표 " 이거 빼먹는데, print(f 구문을 쓸 때는 항상 print(f"응답") 이렇게 "를 응답 주위에 감싸야 한다.
 
 ---
 
@@ -492,6 +559,63 @@ if target_date in close_only.columns:
 else:
     print("데이터 없음")
 
+10)
+유형 : 시장통계_지수비교_KOSPI_KOSDAQ
+질문 : {날짜}에 KOSPI와 KOSDAQ 중 더 높은 지수는?
+답변 : {시장명} ({지수값})
+코드 :
+import yfinance as yf
+import pandas as pd
+
+target_date = "{날짜}"
+
+kospi = yf.Ticker("^KS11")
+kosdaq = yf.Ticker("^KQ11")
+
+# 최근 2년치 데이터 로드
+kospi_df = kospi.history(period="2y")
+kosdaq_df = kosdaq.history(period="2y")
+
+try:
+    kospi_value = kospi_df.loc[target_date]["Close"]
+    kosdaq_value = kosdaq_df.loc[target_date]["Close"]
+
+    if kospi_value > kosdaq_value:
+        print(f"KOSPI ({kospi_value:.2f})")
+    else:
+        print(f"KOSDAQ ({kosdaq_value:.2f})")
+except:
+    print("해당 날짜에 존재하는 데이터가 없습니다.")
+
+11)
+유형 : 시장통계_개별종목_거래비중
+질문 : {날짜}에 {종목명}의 거래량이 전체 시장 거래량의 몇 %인가?
+답변 : {비중}% 또는 "해당 날짜 {종목명} 거래량 비중 데이터 없음"
+코드:
+import pandas as pd
+
+target_date = "{날짜}"
+target_stock = "{종목명}"
+
+# 거래량 데이터 추출
+volume_data = stock_data[stock_data['Price'] == 'Volume'].copy()
+
+if target_date not in volume_data.columns:
+    print(f"해당 날짜 {target_stock} 거래량 비중 데이터 없음")
+else:
+    volume_data = volume_data[['Ticker', '종목명', target_date]].copy()
+    volume_data = volume_data.rename(columns={target_date: '거래량'})
+
+    total_volume = volume_data['거래량'].sum()
+
+    target_row = volume_data[volume_data['종목명'] == target_stock]
+
+    if not target_row.empty and total_volume > 0:
+        target_volume = target_row['거래량'].values[0]
+        ratio = (target_volume / total_volume) * 100
+        print(f"{ratio:.2f}%")
+    else:
+        print(f"해당 날짜 {target_stock} 거래량 비중 데이터 없음")
 ''',
 
 "Task1-3":'''
@@ -642,6 +766,108 @@ try:
     print(", ".join(result))
 except KeyError:
     print("해당 날짜 데이터 없음")
+
+
+
+''',
+
+'Task1-4': '''
+1) 
+유형 : 종목비교_종가비교
+질문 : {날짜}에 {종목1}과 {종목2} 중 종가가 더 높은 종목은?
+답변 : {종목명} ({종가}원) 또는 "해당 날짜에 종가 비교 데이터 없음"
+코드:
+import pandas as pd
+
+target_date = "{날짜}"
+stock1 = "{종목1}"
+stock2 = "{종목2}"
+
+close_data = stock_data[stock_data['Price'] == 'Close'].copy()
+
+# 날짜 유효성 확인
+if target_date not in close_data.columns:
+    print("해당 날짜에 종가 비교 데이터 없음")
+else:
+    # 두 종목의 데이터 필터링
+    close_data = close_data[['종목명', 'Ticker', target_date]]
+    filtered = close_data[close_data['종목명'].isin([stock1, stock2])]
+
+    if filtered.shape[0] < 2:
+        print("해당 날짜에 종가 비교 데이터 없음")
+    else:
+        filtered = filtered.rename(columns={target_date: '종가'})
+        top_row = filtered.sort_values(by='종가', ascending=False).iloc[0]
+        print(f"{top_row['종목명']} ({int(top_row['종가']):,}원)")
+
+        
+2)
+유형: 종목비교_시장평균_등락률비교
+질문: {날짜}에 {종목명}의 등락률이 시장 평균보다 높은가?
+답변: 예 / 아니오 / 데이터 없음
+코드:
+import pandas as pd
+
+target_date = "{날짜}"
+target_stock = "{종목명}"
+
+# 종가 데이터 필터링
+close_data = stock_data[stock_data['Price'] == 'Close'].copy()
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data[date_cols] = close_data[date_cols].astype(float)
+
+# 이전 날짜 계산
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if target_date not in close_data.columns or prev_date not in close_data.columns:
+    print("데이터 없음")
+else:
+    # 전체 등락률 평균 계산
+    close_data['등락률'] = (close_data[target_date] - close_data[prev_date]) / close_data[prev_date] * 100
+    market_avg = close_data['등락률'].mean()
+
+    # 대상 종목 등락률 추출
+    target_row = close_data[close_data['종목명'] == target_stock]
+    if target_row.empty:
+        print("데이터 없음")
+    else:
+        target_return = target_row['등락률'].values[0]
+        if target_return > market_avg:
+            print("예")
+        else:
+            print("아니오")
+
+3)
+유형: 종목비교_등락률비교
+질문: {날짜}에 {종목1}과 {종목2} 중 등락률이 더 높은 종목은?
+답변: {종목명} ({등락률}%) 또는 데이터 없음
+코드:
+
+import pandas as pd
+
+target_date = "{날짜}"
+stock1 = "{종목1}"
+stock2 = "{종목2}"
+
+close_data = stock_data[stock_data['Price'] == 'Close'].copy()
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data[date_cols] = close_data[date_cols].astype(float)
+
+# 이전 날짜 계산
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+
+if target_date not in close_data.columns or prev_date not in close_data.columns:
+    print("데이터 없음")
+else:
+    # 종목 필터링 및 등락률 계산
+    subset = close_data[close_data['종목명'].isin([stock1, stock2])].copy()
+    if subset.shape[0] < 2:
+        print("데이터 없음")
+    else:
+        subset['등락률'] = (subset[target_date] - subset[prev_date]) / subset[prev_date] * 100
+        top_row = subset.sort_values(by='등락률', ascending=False).iloc[0]
+        print(f"{top_row['종목명']} ({top_row['등락률']:.2f}%)")
 ''',
 
 'Task2-1': '''
@@ -940,6 +1166,7 @@ volume_data['거래량'] = volume_data[target_date]
 filtered = volume_data[volume_data['거래량'] >= volume_threshold].sort_values(by='거래량', ascending=False)
 result = filtered['종목명'].tolist()
 print(", ".join(result))
+
 ''',
 
 'Task3-1': '''
@@ -1308,3 +1535,14 @@ result = filtered.apply(lambda row: f"{row['종목명']}({row['증가율']:.0f}%
 print(result.tolist())
 '''
 }
+
+
+
+last_warning_prompt = '''
+[답하기 전 마지막 꼭 지켜야 할 당부의 말]
+- 절대 '코드:'으로 시작하는 등 python에서 실행시킬 수 없는 어떠한 요소도 넣지 마.
+- 바로 복사 붙여넣기 해서 실행시킬 수 있는 코드만 작성해.
+- 너 진짜 계속 print(f"응답") 이거 쓰면서 따옴표 " 이거 빼먹는데, f 구문을 쓸 때는 항상 print(f"응답") 이렇게 "를 응답 주위에 감싸야 한다.
+** 제발 마지막으로 확인해. print(f"")에 따옴표 잘 붙혔는지. 이거 빼먹으면 절대!!!!! 절대!!!! 안된다.
+예시) print(f{종목명}) -> print(f"{종목명}")
+'''

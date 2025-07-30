@@ -23,7 +23,7 @@ response = requests.get(url, params=params, headers=headers)
 
 # 6. 결과 출력
 if response.status_code == 200:
-    print("✅ 응답:", response.json()['message'])
+    print("✅ 응답:", response.json()['answer'])
 else:
     print("❌ 에러 발생:", response.status_code)
     print(response.text)
