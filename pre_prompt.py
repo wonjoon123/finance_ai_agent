@@ -36,6 +36,9 @@ find_intention = '''
   예) `"많이 떨어진 주식", "비싸지 않은 종목" 등 기준 수치가 명확하지 않은 질문"`  
 - 위 조건이 2개 이상 혼합되어 매우 모호한 경우  
   예) `"요즘 괜찮은 종목 뭐 있어?", "가치주 중 좋은 것 추천해줘"`
+[Task4의 추가예시]
+- '삼성전자 종가 알려주라' -> 어느 시점의 종가인지 불분명하기 때문에 모호함.
+- '삼전의 2024년 11월 11일의 종가 알려주라' -> '삼전'이 정확히 무엇인지 알지 못하기 때문에 모호함.
 
 ### Task1 : 단순 조회  
 - **Task1-1** : 가격 조회  
@@ -76,14 +79,6 @@ find_intention = '''
 - **Task3-6** : 거래량 급증 감지  
   예) `"거래량이 20일 평균 대비 500% 이상 급증한 종목"`  
 
-
-[이전 질문 목록]
-- 이전 질문 목록이 먼저 주어지고, 현재 질문이 또 주어질거야.
-- 이전 질문들과 현재 질문들을 종합해서 질문을 분류해줘.
-
-[이전 질문 목록]
----
-
 ## 출력 규칙
 - **반드시** `'Taskn-n'` 형식으로만 출력 (설명, 부가 텍스트 금지)
 - 다시 한 번 아래의 내용을 ! 반드시 확인해줘 !
@@ -97,8 +92,19 @@ find_intention = '''
 'KOSDAQ에서 가장 비싼 종목 3개는?' -> 언제 기준 가장 비싼 종목인지 모르므로 Task4
 '2025-04-16 종가는?' -> 어느 종목의 종가를 의미하는지 모호하므로 Task4
 
-'''
+## 주의사항!
+- Task2-6은 없어!!!!! 
+- Task1-1,Task1-2,Task1-3,Task1-4,Task2-1,Task2-2,Task2-3,Task2-4,Task2-5,Task3-1,Task3-2,Task3-3,Task3-4,Task3-5,Task3-6,Task4를 제외한 어떠한 답도 내지마!!!!!
+- 무조건 위의 분류 내로 할 수 있으니까 추가적인 답을 만들지 마.
+예) Task2-6 (x) 이건 분류 모음에 없으므로, 절대! 답을 내지마.
+- 무조건 [현재질문]에 집중해서 Task를 분류해!!!!!
+- 만약 [현재질문] 내용이 모호하다면 그 때 [이전질문내용]을 참조해서 답을 해줘
+- [이전질문내용]은 기존 질문 답변을 모아놓은 것이야. 질문답변의 맥락을 '충분히' 잘 살핀뒤, 정보가 부족할 경우, Task4로 분류해!!!!
+- 
 
+
+
+'''
 
 task_4_prompt_clarifying = '''
 [역할]
@@ -142,9 +148,6 @@ task_4_prompt_clarifying = '''
   예) `"골든크로스가 몇 번 발생"`  
 - **Task3-6** : 거래량 급증 감지  
   예) `"거래량이 20일 평균 대비 500% 이상 급증한 종목"`  
-
-  
-
 
 [너의 역할 예시]
 예)
@@ -221,15 +224,10 @@ final_common_prompt = '''
   - 소수점 둘째 자리까지 필요할 때: `print(f"{price:,.2f}원")`
   - result의 type이 dataframe일 때, print(result)를 할 경우, text가 아닌 데이터프레임 자체로 output이 나가므로, 꼭 text를 ouput으로 내보낼 수 있도록 한다.
 - 토요일·일요일(주말)에는 데이터가 없을 수 있다는 점을 고려해야 한다.
-* 반드시 바로 실행시킬 수 있는 python 코드 '만'을 작성해줘. 절대 '코드:'으로 시작하는 등 python에서 실행시킬 수 없는 어떠한 요소도 넣지 마 **
+** 반드시 바로 실행시킬 수 있는 python 코드 '만'을 작성해줘. 절대 '코드:'으로 시작하는 등 python에서 실행시킬 수 없는 어떠한 요소도 넣지 마 **
 - 바로 복사 붙여넣기 해서 실행시킬 수 있는 코드만 작성해.
-* 계속 print(f"응답") 이거 쓰면서 따옴표 " 이거 빼먹는데, print(f 구문을 쓸 때는 항상 print(f"응답") 이렇게 "를 응답 주위에 감싸야 한다.
-** 단일 종목을 답으로 내보내야할 경우, 필요한 숫자까지 뒤에 덧붙인다. 
-** 가령, 거래량에 대해 물어봤을 때 거래량 정보를 뒤에 덧붙이거나, 종가에 대해 물어봤을 때, 종가에 대한 정보를 뒤에 덧붙이는 식으로.
-예시) 질문:2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은? 답: 알테오젠 (x) -> 알테오젠 (316,000원)
-예시) 질문:2025-05-09 KOSDAQ 시장에서 거래량이 가장 많은 종목은? 답: 우리로 (x) -> 우리로 (37,729,480주)
-*** 해당 날짜에 대한 데이터 접근이 안될 수 있음 (휴일 or 공휴일 등)
-*** 따라서 항상 try 문을 통해 데이터가 없을 때는 오류가 아닌 데이터가 없다고 명시해야함
+** 계속 print(f"응답") 이거 쓰면서 따옴표 " 이거 빼먹는데, print(f 구문을 쓸 때는 항상 print(f"응답") 이렇게 "를 응답 주위에 감싸야 한다.
+
 ---
 
 ## 데이터 설명
@@ -289,15 +287,12 @@ import pandas as pd
 ticker_name = "{종목명}"
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  open_data = stock_data[(stock_data['Price'] == 'Open') & (stock_data['종목명'] == ticker_name)].copy()
-  open_only = open_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+open_data = stock_data[(stock_data['Price'] == 'Open') & (stock_data['종목명'] == ticker_name)].copy()
+open_only = open_data[date_cols].astype(float)
 
-  price = open_only[target_date].iloc[0]
-  print(f"{price:,.0f}원")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+price = open_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
 
 2)
 유형 : 단순조회_종가
@@ -308,15 +303,13 @@ import pandas as pd
 
 ticker_name = "{종목명}"
 target_date = "{날짜}"
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
-  close_only = close_data[date_cols].astype(float)
 
-  price = close_only[target_date].iloc[0]
-  print(f"{price:,.0f}원")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
 
 3)
 유형 : 가격조회_등락률
@@ -328,23 +321,20 @@ import pandas as pd
 ticker_name = "{종목명}"
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
-  close_only = close_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
 
-  prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
-  prev_date = prev_date.strftime('%Y-%m-%d')
-  if prev_date not in close_only.columns:
-      prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
 
-  close_data['현재종가'] = close_data[target_date]
-  close_data['이전종가'] = close_data[prev_date]
-  change_rate = ((close_data['현재종가'].iloc[0] / close_data['이전종가'].iloc[0]) - 1) * 100
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+change_rate = ((close_data['현재종가'].iloc[0] / close_data['이전종가'].iloc[0]) - 1) * 100
 
-  print(f"{change_rate:+.2f}%")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+print(f"{change_rate:+.2f}%")
 
 4)
 유형 : 가격조회_고가
@@ -355,15 +345,33 @@ import pandas as pd
 
 ticker_name = "{종목명}"
 target_date = "{날짜}"
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
-  high_only = high_data[date_cols].astype(float)
 
-  price = high_only[target_date].iloc[0]
-  print(f"{price:,.0f}원")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
+high_only = high_data[date_cols].astype(float)
+
+price = high_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+
+5)
+유형 : 가격조회_저가
+질문 : {종목명}의 {날짜} 저가는?
+답변 : {가격}원 또는 데이터 없음
+코드 :
+import pandas as pd
+
+ticker_name = "{종목명}"
+target_date = "{날짜}"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+low_data = stock_data[(stock_data['Price'] == 'Low') & (stock_data['종목명'] == ticker_name)].copy()
+low_only = low_data[date_cols].astype(float)
+
+if target_date in low_only.columns:
+    price = low_only[target_date].iloc[0]
+    print(f"{price:,.0f}원")
+else:
+    print("데이터 없음")
 
 ''',
 
@@ -377,23 +385,20 @@ import pandas as pd
 
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  close_data = stock_data[stock_data['Price'] == 'Close'].copy()
-  close_only = close_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[stock_data['Price'] == 'Close'].copy()
+close_only = close_data[date_cols].astype(float)
 
-  prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
-  prev_date = prev_date.strftime('%Y-%m-%d')
-  if prev_date not in close_only.columns:
-      prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
 
-  close_data['현재종가'] = close_data[target_date]
-  close_data['이전종가'] = close_data[prev_date]
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
 
-  count = (close_data['현재종가'] > close_data['이전종가']).sum()
-  print(f"{count}개")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+count = (close_data['현재종가'] > close_data['이전종가']).sum()
+print(f"{count}개")
 
 2)
 유형 : 시장조회_KOSPI_market_count
@@ -404,15 +409,12 @@ import pandas as pd
 
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
-  volume_only = volume_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+volume_only = volume_data[date_cols].astype(float)
 
-  count = (volume_only[target_date] > 0).sum()
-  print(f"{count}개")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+count = (volume_only[target_date] > 0).sum()
+print(f"{count}개")
 
 3)
 유형 : 시장조회_KOSPI_top_volume
@@ -423,16 +425,13 @@ import pandas as pd
 
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
-  volume_only = volume_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+volume_only = volume_data[date_cols].astype(float)
 
-  volume_data['거래량'] = volume_data[target_date]
-  top_row = volume_data.sort_values(by='거래량', ascending=False).iloc[0]
-  print(f"{top_row['종목명']} ({int(top_row['거래량']):,}주)")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+volume_data['거래량'] = volume_data[target_date]
+top_row = volume_data.sort_values(by='거래량', ascending=False).iloc[0]
+print(f"{top_row['종목명']} ({int(top_row['거래량']):,}주)")
 
 4)
 유형 : 시장통계_KOSPI지수
@@ -465,23 +464,20 @@ import pandas as pd
 
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')].copy()
-  close_only = close_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')].copy()
+close_only = close_data[date_cols].astype(float)
 
-  prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
-  prev_date = prev_date.strftime('%Y-%m-%d')
-  if prev_date not in close_only.columns:
-      prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
 
-  close_data['현재종가'] = close_data[target_date]
-  close_data['이전종가'] = close_data[prev_date]
-  count = (close_data['현재종가'] > close_data['이전종가']).sum()
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+count = (close_data['현재종가'] > close_data['이전종가']).sum()
 
-  print(f"{count}개")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+print(f"{count}개")
 
 6)
 유형 : 시장통계_거래대금
@@ -492,21 +488,18 @@ import pandas as pd
 
 target_date = "{날짜}"
 
-try:
-  volume_data = stock_data[stock_data['Price'] == 'Volume'][['Ticker', target_date]].copy()
-  volume_data = volume_data.rename(columns={target_date: 'Volume'})
+volume_data = stock_data[stock_data['Price'] == 'Volume'][['Ticker', target_date]].copy()
+volume_data = volume_data.rename(columns={target_date: 'Volume'})
 
-  close_data = stock_data[stock_data['Price'] == 'Close'][['Ticker', target_date]].copy()
-  close_data = close_data.rename(columns={target_date: 'Close'})
+close_data = stock_data[stock_data['Price'] == 'Close'][['Ticker', target_date]].copy()
+close_data = close_data.rename(columns={target_date: 'Close'})
 
-  final_data = pd.merge(volume_data, close_data, on='Ticker')
+final_data = pd.merge(volume_data, close_data, on='Ticker')
 
-  final_data["거래대금"] = final_data["Volume"] * final_data["Close"]
-  total_turnover = final_data["거래대금"].sum()
+final_data["거래대금"] = final_data["Volume"] * final_data["Close"]
+total_turnover = final_data["거래대금"].sum()
 
-  print(f"{total_turnover:,.0f}원")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+print(f"{total_turnover:,.0f}원")
 
 7)
 유형 : 시장조회_KOSDAQ_top_volume
@@ -517,16 +510,13 @@ import pandas as pd
 
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')].copy()
-  volume_only = volume_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')].copy()
+volume_only = volume_data[date_cols].astype(float)
 
-  volume_data['거래량'] = volume_data[target_date]
-  top_row = volume_data.sort_values(by='거래량', ascending=False).iloc[0]
-  print(f"{top_row['종목명']} ({int(top_row['거래량']):,}주)")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
+volume_data['거래량'] = volume_data[target_date]
+top_row = volume_data.sort_values(by='거래량', ascending=False).iloc[0]
+print(f"{top_row['종목명']} ({int(top_row['거래량']):,}주)")
 
 8)
 유형 : 시장통계_하락종목수
@@ -537,24 +527,21 @@ import pandas as pd
 
 target_date = "{날짜}"
 
-try:
-  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
-  close_data = stock_data[stock_data['Price'] == 'Close'].copy()
-  close_only = close_data[date_cols].astype(float)
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[stock_data['Price'] == 'Close'].copy()
+close_only = close_data[date_cols].astype(float)
 
-  prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
-  prev_date = prev_date.strftime('%Y-%m-%d')
-  if prev_date not in close_only.columns:
-      prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
 
-  close_data['현재종가'] = close_data[target_date]
-  close_data['이전종가'] = close_data[prev_date]
-  count = (close_data['현재종가'] < close_data['이전종가']).sum()
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+count = (close_data['현재종가'] < close_data['이전종가']).sum()
 
-  print(f"{count}개")
-except:
-    print("해당 날짜에 존재하는 데이터가 없습니다.")
-    
+print(f"{count}개")
+
 9)
 유형 : 시장조회_KOSPI_highest_price
 질문 : {날짜} KOSPI 시장에서 가장 비싼 종목은?
@@ -783,6 +770,42 @@ try:
 except KeyError:
     print("해당 날짜 데이터 없음")
 
+7)
+유형: 종목조회_거래량순위
+	•	질문: {날짜}에 {종목명}의 거래량 순위는?
+	•	답변: {순위}위 또는 “데이터 없음”
+	•	코드:
+import pandas as pd
+
+target_date = "{날짜}"
+target_stock = "{종목명}"
+
+# 거래량 데이터 필터링
+volume_data = stock_data[stock_data['Price'] == 'Volume'].copy()
+
+# 날짜 컬럼 유효성 검사
+if target_date not in stock_data.columns:
+    print("데이터 없음")
+else:
+    # 필요한 컬럼만 추출
+    volume_data = volume_data[['종목명', 'Ticker', target_date]].copy()
+    volume_data = volume_data.dropna(subset=[target_date])
+    volume_data[target_date] = volume_data[target_date].astype(float)
+
+    # 거래량 기준 내림차순 정렬
+    volume_data = volume_data.sort_values(by=target_date, ascending=False).reset_index(drop=True)
+
+    # 인덱스를 순위로 만들기
+    volume_data['순위'] = volume_data.index + 1
+
+    # 대상 종목 순위 찾기
+    row = volume_data[volume_data['종목명'] == target_stock]
+
+    if row.empty:
+        print("데이터 없음")
+    else:
+        rank = int(row['순위'].values[0])
+        print(f"{rank}위")
 
 
 ''',
@@ -884,6 +907,70 @@ else:
         subset['등락률'] = (subset[target_date] - subset[prev_date]) / subset[prev_date] * 100
         top_row = subset.sort_values(by='등락률', ascending=False).iloc[0]
         print(f"{top_row['종목명']} ({top_row['등락률']:.2f}%)")
+
+4)
+유형: 종목비교_거래량비교
+질문: {날짜}에 {종목1}과 {종목2} 중 거래량이 더 높은 종목은?
+답변: {종목명} ({거래량}주) 또는 “데이터 없음”
+코드:
+import pandas as pd
+
+target_date = "{날짜}"
+stock1 = "{종목1}"
+stock2 = "{종목2}"
+
+# 거래량 데이터 필터링
+volume_data = stock_data[stock_data['Price'] == 'Volume'].copy()
+
+# 날짜 존재 여부 확인
+if target_date not in stock_data.columns:
+    print("데이터 없음")
+else:
+    # 대상 종목 2개 필터링
+    filtered = volume_data[volume_data['종목명'].isin([stock1, stock2])].copy()
+    filtered = filtered[['종목명', target_date]].dropna()
+    filtered[target_date] = filtered[target_date].astype(float)
+
+    if filtered.shape[0] < 2:
+        print("데이터 없음")
+    else:
+        top_row = filtered.sort_values(by=target_date, ascending=False).iloc[0]
+        volume = int(top_row[target_date])
+        print(f"{top_row['종목명']} ({volume:,}주)")
+
+
+유형: 시장비교_지수등락률
+질문:{날짜}에 KOSPI와 KOSDAQ 중 전일 대비 상승률이 더 높은 지수는?
+출력:"KOSPI (상승률: +x.xx%)" 또는 "KOSDAQ (상승률: +x.xx%)"
+(※ 상승률은 반올림, % 포함, 음수일 경우 - 포함)
+
+코드: import pandas as pd
+
+target_date = "{날짜}"
+
+# 날짜 인덱스 구하기
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+if target_date not in date_cols:
+    print("데이터 없음")
+else:
+    current_idx = date_cols.index(target_date)
+    prev_date = date_cols[current_idx - 1] if current_idx > 0 else None
+
+    if prev_date is None:
+        print("이전 날짜 없음")
+    else:
+        # KOSPI 지수 행
+        kospi_row = stock_data[(stock_data['종목명'] == 'KOSPI') & (stock_data['Price'] == 'Close')].iloc[0]
+        kosdaq_row = stock_data[(stock_data['종목명'] == 'KOSDAQ') & (stock_data['Price'] == 'Close')].iloc[0]
+
+        kospi_change = ((float(kospi_row[target_date]) / float(kospi_row[prev_date])) - 1) * 100
+        kosdaq_change = ((float(kosdaq_row[target_date]) / float(kosdaq_row[prev_date])) - 1) * 100
+
+        if kospi_change > kosdaq_change:
+            print(f"KOSPI (상승률: {kospi_change:+.2f}%)")
+        else:
+            print(f"KOSDAQ (상승률: {kosdaq_change:+.2f}%)")
+
 ''',
 
 'Task2-1': '''
@@ -943,6 +1030,41 @@ volume_data['변화율'] = ((volume_data['현재거래량'] / volume_data['이�
 filtered = volume_data[volume_data['변화율'] >= threshold].sort_values(by='변화율', ascending=False)
 result = filtered['종목명'].tolist()
 print(", ".join(result))
+
+3) 
+유형: 종목스캐닝_거래량_이상급증
+질문: {날짜}에 거래량이 20일 평균 대비 200% 이상 급증한 종목을 알려줘
+답변: {종목명 리스트} 또는 “해당 날짜 데이터 없음”
+코드:
+import pandas as pd
+
+target_date = "{날짜}"
+volume_data = stock_data[stock_data['Price'] == 'Volume'].copy()
+
+# 날짜 컬럼 추출 및 정렬
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+date_cols = sorted(date_cols)  # 보통 문자열 날짜라 정렬 필요
+
+if target_date not in date_cols:
+    print("해당 날짜 데이터 없음")
+else:
+    # 인덱스 위치로 20일 평균 대상 구간 계산
+    idx = date_cols.index(target_date)
+    if idx < 20:
+        print("20일 평균을 계산하기에 데이터가 부족합니다.")
+    else:
+        avg_range = date_cols[idx-20:idx]  # target_date 전 20일
+        volume_data = volume_data.copy()
+        volume_data['20일평균'] = volume_data[avg_range].astype(float).mean(axis=1)
+        volume_data['현재거래량'] = volume_data[target_date].astype(float)
+        volume_data['비율'] = volume_data['현재거래량'] / volume_data['20일평균']
+
+        surged = volume_data[volume_data['비율'] >= 3]  # 200% 이상 증가 → 3배 이상
+
+        if surged.empty:
+            print("조건을 만족하는 종목이 없습니다.")
+        else:
+            print(", ".join(surged['종목명'].dropna().tolist()))
 ''',
 
 'Task2-2': '''
@@ -1185,6 +1307,49 @@ print(", ".join(result))
 
 ''',
 
+'Task2-6': '''
+유형: 종목스캐닝_거래량_2배급증
+질문: {날짜}에 거래량이 20일 평균 대비 100% 이상 급증한 종목을 알려줘
+답변: {종목명 리스트} 또는 “해당 날짜 데이터 없음”
+코드:
+import pandas as pd
+
+target_date = "{날짜}"
+
+# 거래량 데이터
+volume_data = stock_data[stock_data['Price'] == 'Volume'].copy()
+
+# 날짜 컬럼 추출 및 정렬
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+date_cols = sorted(date_cols)
+
+# 날짜가 존재하지 않으면 예외 처리
+if target_date not in date_cols:
+    print("해당 날짜 데이터 없음")
+else:
+    idx = date_cols.index(target_date)
+    
+    # 20일 평균을 계산할 만큼의 이전 날짜가 부족한 경우
+    if idx < 20:
+        print("20일 평균을 계산하기에 데이터가 부족합니다.")
+    else:
+        # 전 20일간의 날짜 구간
+        avg_range = date_cols[idx-20:idx]
+
+        # 평균 및 현재 거래량 계산
+        volume_data['20일평균'] = volume_data[avg_range].astype(float).mean(axis=1)
+        volume_data['현재거래량'] = volume_data[target_date].astype(float)
+        volume_data['비율'] = volume_data['현재거래량'] / volume_data['20일평균']
+
+        # 100% 이상 급증한 종목 필터링 (즉, 2배 이상)
+        surged = volume_data[volume_data['비율'] >= 2]
+
+        if surged.empty:
+            print("조건을 만족하는 종목이 없습니다.")
+        else:
+            print(", ".join(surged['종목명'].dropna().tolist()))
+''',
+
 'Task3-1': '''
 1)
 유형 : 시그널감지_MA20돌파
@@ -1252,10 +1417,10 @@ def calculate_rsi_vectorized(df_close, period=14):
     rsi = 100 - (100 / (1 + rs))
     return rsi
 
-target_date = "{날짜}"
+target_date = {날짜}
 threshold = {수치}
 
-date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
 close_data = stock_data[stock_data['Price'] == 'Close'].set_index('Ticker')
 close_only = close_data[date_cols].astype(float)
 
@@ -1263,7 +1428,7 @@ rsi_df = calculate_rsi_vectorized(close_only)
 filtered = rsi_df[rsi_df[target_date] >= threshold]
 
 result = [
-    f"{close_data.loc[ticker, '종목명']} (RSI:{rsi_df.loc[ticker, target_date]:.1f})"
+    f"{close_data.loc[ticker, '종목명']}(RSI:{rsi_df.loc[ticker, target_date]:.1f})"
     for ticker in filtered.index
 ]
 print(", ".join(result))
@@ -1286,10 +1451,10 @@ def calculate_rsi_vectorized(df_close, period=14):
     rsi = 100 - (100 / (1 + rs))
     return rsi
 
-target_date = "{날짜}"
+target_date = {날짜}
 threshold = {수치}
 
-date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
 close_data = stock_data[stock_data['Price'] == 'Close'].set_index('Ticker')
 close_only = close_data[date_cols].astype(float)
 
@@ -1304,6 +1469,7 @@ print(", ".join(result))
 ''',
 
 'Task3-3': '''
+
 1)
 유형 : 시그널감지_볼린저_lower
 질문 : {날짜}에 볼린저 밴드 하단에 터치한 종목을 알려줘
@@ -1367,8 +1533,8 @@ import pandas as pd
 
 start_date = "{시작일}"
 end_date = "{종료일}"
-short_window = 20
-long_window = 60
+short_window = 5
+long_window = 20
 
 date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
 close_data = stock_data[stock_data['Price'] == 'Close'].copy()
@@ -1401,8 +1567,8 @@ import pandas as pd
 
 start_date = "{시작일}"
 end_date = "{종료일}"
-short_window = 20
-long_window = 60
+short_window = 5
+long_window = 20
 
 date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
 close_data = stock_data[stock_data['Price'] == 'Close'].copy()
@@ -1437,8 +1603,8 @@ import pandas as pd
 ticker_name = "{종목명}"
 start_date = "{시작일}"
 end_date = "{종료일}"
-short_window = 20
-long_window = 60
+short_window = 5
+long_window = 20
 
 date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
 row = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)]
@@ -1468,8 +1634,8 @@ import pandas as pd
 ticker_name = "{종목명}"
 start_date = "{시작일}"
 end_date = "{종료일}"
-short_window = 20
-long_window = 60
+short_window = 5
+long_window = 20
 
 date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
 row = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)]
@@ -1559,8 +1725,10 @@ last_warning_prompt = '''
 - 절대 '코드:'으로 시작하는 등 python에서 실행시킬 수 없는 어떠한 요소도 넣지 마.
 - 바로 복사 붙여넣기 해서 실행시킬 수 있는 코드만 작성해.
 - 너 진짜 계속 print(f"응답") 이거 쓰면서 따옴표 " 이거 빼먹는데, f 구문을 쓸 때는 항상 print(f"응답") 이렇게 "를 응답 주위에 감싸야 한다.
+- import pandas as pd, import numpy as np 이외의 import는 하지 말아야 해.
 ** 제발 마지막으로 확인해. print(f"")에 따옴표 잘 붙혔는지. 이거 빼먹으면 절대!!!!! 절대!!!! 안된다.
 예시) print(f{종목명}) -> print(f"{종목명}")
-- print(f"{price:,0f}원")과 같은 문법 오류도 있는지 확인하고 고쳐.
-예시) print(f"{price:,0f}원") ->  print(f"{price:,.0f}원")
+- 항상 코드 안에서 keyerror가 날 부분을 예시대로 try문으로 방지했는지 꼭 확인해.
+- 시가총액은 구현되어있지 않으므로 다른 질문을 요구해.
+
 '''

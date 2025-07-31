@@ -74,11 +74,12 @@ base_url = 'http://49.50.129.227:8000/'
   - `question` (string, 필수) – 사용자 입력 질문
 - **Headers:**
   - `Authorization` – 하이퍼클로바 LLM API 키 (예: `Bearer <YOUR-CLOVA-API-KEY>`)
-  - `X-NCP-CLOVASTUDIO-REQUEST-ID` – 요청 고유 ID (UUID 권장)
+  - `X-NCP-CLOVASTUDIO-REQUEST-ID` – 요청 고유 ID (UUID 권장) (선택, 기본값 None) (task 5의 멀티턴에 대해서만 사용됨.)
 - **Response:**
 ```json
 {
-  "answer": "질의 결과 또는 재질문"
+  "answer": "질의 결과 또는 재질문",
+  "request_id": id (멀티턴 시 입력값에 사용됨)
 }
 ### 예시 요청 (Example Request)
 bash
@@ -88,17 +89,43 @@ curl -G "http://49.50.129.227:8000/" \
   -H "X-NCP-CLOVASTUDIO-REQUEST-ID: 1234"
 
 python
+url = "http://49.50.129.227:8000/"
 params = {
     "question": question
 }
 headers = {
-    "Authorization": "Bearer <YOUR-CLOVA-API-KEY>",  # 실제 API 키 입력
-    "X-NCP-CLOVASTUDIO-REQUEST-ID": '1'
+    "Authorization": "Bearer <YOUR-CLOVA-API-KEY>"  # 실제 API 키 입력
+    // ,"X-NCP-CLOVASTUDIO-REQUEST-ID": '1'  멀티턴의 경우 request_id 추가
 }
 response = requests.get(url, params=params, headers=headers)
 
 ### 예시 응답 (Example Response)
 json
 {
-  "answer": "DXVX, 엑스큐어, 샤페..."
+  "answer": "DXVX, 엑스큐어, 샤페...",
+  "request_id": '2'
 }
+
+
+## task5: 멀티턴
+- 멀티턴을 요하는 질문의 경우 request_id를 input에 추가함으로써 대화를 이어나갈 수 있음.
+
+예시) (request_id 별로 다른 멀티턴 대화를 이어갈 수 있음.)
+Q: 하이
+A: 안녕하세요! 금융 데이터 분석 인공지능을 보조할 조교입니다. 
+궁금하신 내용이나 요청하실 사항이 있으면 언제든지 말씀해주세요. 제가 최대한 도움을 드리겠습니다.
+Q: 삼성전자 종가 알려주라
+A: 어느 날짜의 삼성전자 종가를 알고 싶으신가요? 날짜를 말씀해 주신다면 해당 날짜의 삼성전자 종가를 알려드리겠습니다.
+Q: 2024년 11월 11일의 종가
+A: 54,305원
+
+사용 방법:
+1. 일단 request_id를 추가하지 않고 답변을 받는다.
+2. 답변을 받고, 멀티턴으로 요청하고 싶은 대화의 경우 받은 request_id를 입력값에 넣는다.
+3. 멀티턴을 이어간다.
+
+주의사항:
+-멀티턴의 경우 대화당 총 10회로 제한되어 있습니다.
+
+
+- 더 자세한 requesting 방법은 requesting.py를 참고하시오.

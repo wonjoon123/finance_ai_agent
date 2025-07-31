@@ -150,6 +150,7 @@ def call_clova_task4(user_input, api_key, request_id):
 
 # 마지막 1,2,3 분류 되고 실행파일 만들기 도와줘 클로바
 def call_clova(user_input, api_key, request_id, pre_prompt_map: str):
+
     messages = [
         {
             "role": "system",
@@ -157,6 +158,7 @@ def call_clova(user_input, api_key, request_id, pre_prompt_map: str):
         },
         {"role": "user", "content": user_input}
     ]
+
 
     headers = {
         "Content-Type": "application/json",
@@ -176,6 +178,7 @@ def call_clova(user_input, api_key, request_id, pre_prompt_map: str):
     }
 
     response = requests.post(API_URL, headers=headers, json=payload)
+
     if response.status_code == 200:
         result = response.json()["result"]["message"]["content"]
         # logger.info(f'final_result: {result}')
