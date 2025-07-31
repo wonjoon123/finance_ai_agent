@@ -13398,3 +13398,1452 @@ else:
         top_row = filtered.sort_values(by='종가', ascending=False).iloc[0]
         print(f"{top_row['종목명']} ({int(top_row['종가']):,}원)")
 [2025-07-31 02:45:05,100] [INFO] 현대차 (176,691원)
+[2025-07-31 09:18:51,642] [INFO] Starting call_clova!
+[2025-07-31 09:18:51,969] [INFO] Starting app...
+[2025-07-31 09:40:48,588] [INFO] Starting call_clova!
+[2025-07-31 09:40:48,893] [INFO] Starting app...
+[2025-07-31 09:41:59,999] [INFO] question: 2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?
+[2025-07-31 09:42:00,973] [INFO] task classification: Task1-3
+[2025-07-31 09:42:00,973] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}]}
+[2025-07-31 09:42:10,685] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-06-27"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+    volume_only = volume_data[date_cols].astype(float)
+
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 09:42:10,685] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-06-27"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+    volume_only = volume_data[date_cols].astype(float)
+
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 09:42:10,694] [INFO] KCTC, 동방, 삼성전자, 콜마홀딩스, 한국전력, 카카오, 카카오페이, 두산에너빌리티, 제주은행, 형지엘리트
+[2025-07-31 09:42:27,143] [INFO] question: 요즘 괜찮은 종목 있어?
+[2025-07-31 09:42:28,671] [INFO] task classification: Task4-4
+[2025-07-31 09:42:28,671] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}, {'task': 'Task4-4', 'question': '[이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[현재질문]요즘 괜찮은 종목 있어?'}]}
+[2025-07-31 09:42:28,671] [INFO] this is task4 question
+[2025-07-31 09:42:31,325] [INFO] Task4 clarification output: 제가 이해하기로는 요즘 괜찮은 종목을 추천해달라는 말씀이신 것 같습니다. 하지만 이는 투자와 관련된 결정으로, 저는 이러한 결정에 대한 책임을 지지 않습니다. 
+
+종목 추천 외에 다른 질문을 해 주시면 최대한 도움을 드리겠습니다.
+[2025-07-31 09:43:07,203] [INFO] question: 최근 거래량 엄청 늘어난 종목 있어?
+[2025-07-31 09:43:08,035] [INFO] task classification: Task4-4
+[2025-07-31 09:43:08,035] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}, {'task': 'Task4-4', 'question': '[이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[현재질문]요즘 괜찮은 종목 있어?'}, {'task': 'Task4-4', 'question': '[이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[이전질문][이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[현재질문]요즘 괜찮은 종목 있어?\n[현재질문]최근 거래량 엄청 늘어난 종목 있어?'}]}
+[2025-07-31 09:43:08,035] [INFO] this is task4 question
+[2025-07-31 09:43:14,682] [INFO] Task4 clarification output: 사용자님께서 말씀하신 내용으로는 원하는 답변을 드리기 어렵습니다. 
+
+조금 더 구체적으로 질문을 해 주신다면 원하시는 답변을 드릴 수 있습니다.
+
+다음과 같은 방식으로 질문을 해 주시면 더욱 정확한 답변을 드릴 수 있습니다.
+
+- "종목명+의+날짜+종가는?" 형태로 질문을 하면 해당 종목의 특정 날짜 종가를 알 수 있습니다.
+ex) "삼성전자의 2024-07-01 종가는?"
+
+- "날짜+에+시장이름+상승 종목 수는?" 형태로 질문을 하면 해당 날짜의 시장에서 상승한 종목 수를 알 수 있습니다.
+ex) "2024-07-01에 KOSPI 상승 종목 수는?"
+
+더 궁금하신 사항이나 도움이 필요하신 부분이 있으시면 말씀해 주세요. 최선을 다해 도와드리겠습니다.
+[2025-07-31 11:31:31,823] [INFO] Starting call_clova!
+[2025-07-31 11:31:32,134] [INFO] Starting app...
+[2025-07-31 11:31:39,998] [INFO] question: 2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?
+[2025-07-31 11:31:42,719] [INFO] task classification: Task1-3
+[2025-07-31 11:31:42,719] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}]}
+[2025-07-31 11:31:51,327] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-06-27"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+    volume_only = volume_data[date_cols].astype(float)
+
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:31:51,327] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-06-27"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+    volume_only = volume_data[date_cols].astype(float)
+
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:31:51,337] [INFO] KCTC, 동방, 삼성전자, 콜마홀딩스, 한국전력, 카카오, 카카오페이, 두산에너빌리티, 제주은행, 형지엘리트
+[2025-07-31 11:32:00,095] [INFO] question: KOSDAQ에서 대성미생물의 2024-10-28 종가는?
+[2025-07-31 11:32:01,106] [INFO] task classification: Task1-1
+[2025-07-31 11:32:01,107] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}, {'task': 'Task1-1', 'question': '[이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[현재질문]KOSDAQ에서 대성미생물의 2024-10-28 종가는?'}]}
+[2025-07-31 11:32:07,748] [INFO] raw answer: import pandas as pd
+
+ticker_name = "대성미생물"
+target_date = "2024-10-28"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:32:07,748] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "대성미생물"
+target_date = "2024-10-28"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:32:07,753] [INFO] 10,008원
+[2025-07-31 11:32:12,591] [INFO] question: 도화엔지니어링의 2025-06-25 고가은?
+[2025-07-31 11:32:13,399] [INFO] task classification: Task1-1
+[2025-07-31 11:32:13,399] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}, {'task': 'Task1-1', 'question': '[이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[현재질문]KOSDAQ에서 대성미생물의 2024-10-28 종가는?'}, {'task': 'Task1-1', 'question': '[이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[이전질문][이전질문]2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?\n[현재질문]KOSDAQ에서 대성미생물의 2024-10-28 종가는?\n[현재질문]도화엔지니어링의 2025-06-25 고가은?'}]}
+[2025-07-31 11:32:20,970] [INFO] raw answer: import pandas as pd
+
+ticker_name = "대성미생물"
+target_date = "2024-10-28"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:32:20,970] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "대성미생물"
+target_date = "2024-10-28"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:32:20,975] [INFO] 10,008원
+[2025-07-31 11:36:53,905] [INFO] Starting call_clova!
+[2025-07-31 11:36:54,204] [INFO] Starting app...
+[2025-07-31 11:37:04,369] [INFO] question: KOSDAQ에서 대성미생물의 2024-10-28 종가는?
+[2025-07-31 11:37:46,003] [INFO] Starting call_clova!
+[2025-07-31 11:37:46,308] [INFO] Starting app...
+[2025-07-31 11:37:50,687] [INFO] question: 2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?
+[2025-07-31 11:37:51,828] [INFO] task classification: Task1-3
+[2025-07-31 11:37:51,829] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}]}
+[2025-07-31 11:38:01,519] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-06-27"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+    volume_only = volume_data[date_cols].astype(float)
+
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:38:01,519] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-06-27"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')].copy()
+    volume_only = volume_data[date_cols].astype(float)
+
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:38:01,526] [INFO] KCTC, 동방, 삼성전자, 콜마홀딩스, 한국전력, 카카오, 카카오페이, 두산에너빌리티, 제주은행, 형지엘리트
+[2025-07-31 11:38:03,797] [INFO] question: KOSDAQ에서 대성미생물의 2024-10-28 종가는?
+[2025-07-31 11:38:05,297] [INFO] task classification: Task1-1
+[2025-07-31 11:38:05,297] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}, {'task': 'Task1-1', 'question': 'KOSDAQ에서 대성미생물의 2024-10-28 종가는?'}]}
+[2025-07-31 11:38:12,214] [INFO] raw answer: import pandas as pd
+
+ticker_name = "대성미생물"
+target_date = "2024-10-28"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['시장'] == 'KOSDAQ') & (stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:38:12,214] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "대성미생물"
+target_date = "2024-10-28"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['시장'] == 'KOSDAQ') & (stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:38:12,219] [INFO] 10,008원
+[2025-07-31 11:38:17,270] [INFO] question: 도화엔지니어링의 2025-06-25 고가은?
+[2025-07-31 11:38:18,182] [INFO] task classification: Task1-1
+[2025-07-31 11:38:18,182] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-06-27에서 KOSPI에서 거래량 많은 종목 10개는?'}, {'task': 'Task1-1', 'question': 'KOSDAQ에서 대성미생물의 2024-10-28 종가는?'}, {'task': 'Task1-1', 'question': '도화엔지니어링의 2025-06-25 고가은?'}]}
+[2025-07-31 11:38:24,233] [INFO] raw answer: import pandas as pd
+
+ticker_name = "도화엔지니어링"
+target_date = "2025-06-25"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
+high_only = high_data[date_cols].astype(float)
+
+price = high_only[target_date].iloc[0]
+print(f"{price:,0f}원")
+[2025-07-31 11:38:24,233] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "도화엔지니어링"
+target_date = "2025-06-25"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
+high_only = high_data[date_cols].astype(float)
+
+price = high_only[target_date].iloc[0]
+print(f"{price:,0f}원")
+[2025-07-31 11:42:03,034] [INFO] Starting call_clova!
+[2025-07-31 11:42:03,321] [INFO] Starting app...
+[2025-07-31 11:42:07,460] [INFO] question: 도화엔지니어링의 2025-06-25 고가은?
+[2025-07-31 11:42:08,317] [INFO] task classification: Task1-1
+[2025-07-31 11:42:08,317] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': '도화엔지니어링의 2025-06-25 고가은?'}]}
+[2025-07-31 11:42:15,273] [INFO] raw answer: import pandas as pd
+
+ticker_name = "도화엔지니어링"
+target_date = "2025-06-25"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
+high_only = high_data[date_cols].astype(float)
+
+price = high_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:42:15,273] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "도화엔지니어링"
+target_date = "2025-06-25"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+high_data = stock_data[(stock_data['Price'] == 'High') & (stock_data['종목명'] == ticker_name)].copy()
+high_only = high_data[date_cols].astype(float)
+
+price = high_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:42:15,278] [INFO] 6,890원
+[2025-07-31 11:42:20,482] [INFO] question: KOSPI에서 대덕1우의 2024-08-01 종가는?
+[2025-07-31 11:42:21,491] [INFO] task classification: Task1-2
+[2025-07-31 11:42:21,491] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': '도화엔지니어링의 2025-06-25 고가은?'}, {'task': 'Task1-2', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}]}
+[2025-07-31 11:42:30,827] [INFO] raw answer: ```python
+import pandas as pd
+
+target_date = "2024-08-01"
+target_stock = "대덕1우"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')].copy()
+close_only = close_data[date_cols].astype(float)
+
+if target_date in close_only.columns:
+    close_data['종가'] = close_data[target_date]
+    target_row = close_data[close_data['종목명'] == target_stock]
+    print(f"{target_row['종가'].values[0]:,.2f}")
+else:
+    print("데이터 없음")
+```
+[2025-07-31 11:42:30,828] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-08-01"
+target_stock = "대덕1우"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')].copy()
+close_only = close_data[date_cols].astype(float)
+
+if target_date in close_only.columns:
+    close_data['종가'] = close_data[target_date]
+    target_row = close_data[close_data['종목명'] == target_stock]
+    print(f"{target_row['종가'].values[0]:,.2f}")
+else:
+    print("데이터 없음")
+[2025-07-31 11:42:30,835] [INFO] 6,457.92
+[2025-07-31 11:43:45,116] [INFO] question: 2025-02-17에 거래량이 20일 평균 대비 300% 이상 급증한 종목을 알려줘
+[2025-07-31 11:43:46,885] [INFO] task classification: Task2-6
+[2025-07-31 11:43:46,885] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': '도화엔지니어링의 2025-06-25 고가은?'}, {'task': 'Task1-2', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}, {'task': 'Task2-6', 'question': '2025-02-17에 거래량이 20일 평균 대비 300% 이상 급증한 종목을 알려줘'}]}
+[2025-07-31 11:44:50,351] [INFO] question: 2024-12-11에 거래량이 500만주 이상인 종목을 모두 보여줘
+[2025-07-31 11:44:52,000] [INFO] task classification: Task2-5
+[2025-07-31 11:44:52,000] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': '도화엔지니어링의 2025-06-25 고가은?'}, {'task': 'Task1-2', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}, {'task': 'Task2-6', 'question': '2025-02-17에 거래량이 20일 평균 대비 300% 이상 급증한 종목을 알려줘'}, {'task': 'Task2-5', 'question': '2024-12-11에 거래량이 500만주 이상인 종목을 모두 보여줘'}]}
+[2025-07-31 11:44:58,649] [INFO] raw answer: import pandas as pd
+
+target_date = "2024-12-11"
+volume_threshold = 5000000
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+volume_data = stock_data[stock_data['Price'] == 'Volume'].copy()
+volume_only = volume_data[date_cols].astype(float)
+
+volume_data['거래량'] = volume_data[target_date]
+filtered = volume_data[volume_data['거래량'] >= volume_threshold].sort_values(by='거래량', ascending=False)
+
+result = filtered['종목명'].tolist()
+print(", ".join(result))
+[2025-07-31 11:44:58,650] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-12-11"
+volume_threshold = 5000000
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+volume_data = stock_data[stock_data['Price'] == 'Volume'].copy()
+volume_only = volume_data[date_cols].astype(float)
+
+volume_data['거래량'] = volume_data[target_date]
+filtered = volume_data[volume_data['거래량'] >= volume_threshold].sort_values(by='거래량', ascending=False)
+
+result = filtered['종목명'].tolist()
+print(", ".join(result))
+[2025-07-31 11:44:58,659] [INFO] 삼부토건, 키움제11호스팩, 폴라리스AI, 쓰리빌리언, 한국ANKOR유전, 일성건설, 이스타코, 범양건영, 일신석재, 나우IB, 써니전자, 우리로, 형지엘리트, 국영지앤엠, 대성창투, 삼성전자, 코이즈, 이오플로우, 씨씨에스, 드림시큐리티, 형지I&C, 제이씨현시스템, 아톤, 다보링크, 깨끗한나라, 이스트소프트, 아가방컴퍼니, 에스와이스틸텍, 인터지스, 헝셩그룹, 오리엔트바이오, SG, 아이윈플러스, 위즈코프, CS, 삼성중공업, 두산에너빌리티, 시공테크, 엑스게이트, 파라텍, 카스, 위지윅스튜디오, 아이비김영, 진양산업, 이스트아시아홀딩스, 파미셀, DB, 노을, 디와이디, 모나리자, 아주IB투자, 쏠리드
+[2025-07-31 11:47:03,694] [INFO] question: 2024-11-18 KOSPI 지수는?
+[2025-07-31 11:47:04,682] [INFO] task classification: Task1-2
+[2025-07-31 11:47:04,682] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': '도화엔지니어링의 2025-06-25 고가은?'}, {'task': 'Task1-2', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}, {'task': 'Task2-6', 'question': '2025-02-17에 거래량이 20일 평균 대비 300% 이상 급증한 종목을 알려줘'}, {'task': 'Task2-5', 'question': '2024-12-11에 거래량이 500만주 이상인 종목을 모두 보여줘'}, {'task': 'Task1-2', 'question': '2024-11-18 KOSPI 지수는?'}]}
+[2025-07-31 11:47:09,857] [INFO] raw answer: import yfinance as yf
+import pandas as pd
+
+target_date = "2024-11-18"
+
+kospi = yf.Ticker("^KS11")
+
+df = kospi.history(period="2y")
+
+try:
+    close_price = df.loc[target_date]["Close"]
+    print(f"{close_price:.2f}")
+except:
+    print('해당 날짜에 존재하는 데이터가 없습니다.')
+[2025-07-31 11:47:09,857] [INFO] 
+
+cleaned code: import yfinance as yf
+import pandas as pd
+
+target_date = "2024-11-18"
+
+kospi = yf.Ticker("^KS11")
+
+df = kospi.history(period="2y")
+
+try:
+    close_price = df.loc[target_date]["Close"]
+    print(f"{close_price:.2f}")
+except:
+    print('해당 날짜에 존재하는 데이터가 없습니다.')
+[2025-07-31 11:47:10,885] [INFO] 2469.07
+[2025-07-31 11:47:17,654] [INFO] question: 세화피앤씨의 2025-04-16 종가는?
+[2025-07-31 11:48:11,568] [INFO] Starting call_clova!
+[2025-07-31 11:48:11,896] [INFO] Starting app...
+[2025-07-31 11:48:28,870] [INFO] question: KOSPI에서 대덕1우의 2024-08-01 종가는?
+[2025-07-31 11:48:29,966] [INFO] task classification: Task1-1
+[2025-07-31 11:48:29,966] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}]}
+[2025-07-31 11:48:36,803] [INFO] raw answer: import pandas as pd
+
+ticker_name = "대덕1우"
+target_date = "2024-08-01"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:48:36,803] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "대덕1우"
+target_date = "2024-08-01"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:48:36,810] [INFO] 6,458원
+[2025-07-31 11:48:41,291] [INFO] question: 하이트진로2우B의 2024-09-24 저가은?
+[2025-07-31 11:48:42,791] [INFO] task classification: Task1-1
+[2025-07-31 11:48:42,791] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}, {'task': 'Task1-1', 'question': '하이트진로2우B의 2024-09-24 저가은?'}]}
+[2025-07-31 11:48:50,795] [INFO] raw answer: import pandas as pd
+
+ticker_name = "하이트진로2우B"
+target_date = "2024-09-24"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+low_data = stock_data[(stock_data['Price'] == 'Low') & (stock_data['종목명'] == ticker_name)].copy()
+low_only = low_data[date_cols].astype(float)
+
+if target_date in low_only.columns:
+    price = low_only[target_date].iloc[0]
+    print(f"{price:,.0f}원")
+else:
+    print("데이터 없음")
+[2025-07-31 11:48:50,795] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "하이트진로2우B"
+target_date = "2024-09-24"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+low_data = stock_data[(stock_data['Price'] == 'Low') & (stock_data['종목명'] == ticker_name)].copy()
+low_only = low_data[date_cols].astype(float)
+
+if target_date in low_only.columns:
+    price = low_only[target_date].iloc[0]
+    print(f"{price:,.0f}원")
+else:
+    print("데이터 없음")
+[2025-07-31 11:48:50,800] [INFO] 15,350원
+[2025-07-31 11:49:41,411] [INFO] question: KG이니시스의 2024-07-17 종가는?
+[2025-07-31 11:49:42,463] [INFO] task classification: Task1-1
+[2025-07-31 11:49:42,463] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}, {'task': 'Task1-1', 'question': '하이트진로2우B의 2024-09-24 저가은?'}, {'task': 'Task1-1', 'question': 'KG이니시스의 2024-07-17 종가는?'}]}
+[2025-07-31 11:49:48,668] [INFO] raw answer: import pandas as pd
+
+ticker_name = "KG이니시스"
+target_date = "2024-07-17"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:49:48,669] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "KG이니시스"
+target_date = "2024-07-17"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:49:48,673] [INFO] 10,409원
+[2025-07-31 11:49:52,319] [INFO] question: 케이씨에스의 2024-07-02 시가은?
+[2025-07-31 11:49:53,536] [INFO] task classification: Task1-1
+[2025-07-31 11:49:53,536] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}, {'task': 'Task1-1', 'question': '하이트진로2우B의 2024-09-24 저가은?'}, {'task': 'Task1-1', 'question': 'KG이니시스의 2024-07-17 종가는?'}, {'task': 'Task1-1', 'question': '케이씨에스의 2024-07-02 시가은?'}]}
+[2025-07-31 11:49:59,671] [INFO] raw answer: import pandas as pd
+
+ticker_name = "케이씨에스"
+target_date = "2024-07-02"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+open_data = stock_data[(stock_data['Price'] == 'Open') & (stock_data['종목명'] == ticker_name)].copy()
+open_only = open_data[date_cols].astype(float)
+
+price = open_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:49:59,671] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "케이씨에스"
+target_date = "2024-07-02"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+open_data = stock_data[(stock_data['Price'] == 'Open') & (stock_data['종목명'] == ticker_name)].copy()
+open_only = open_data[date_cols].astype(float)
+
+price = open_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:49:59,674] [INFO] 6,536원
+[2025-07-31 11:50:20,273] [INFO] question: 2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?
+[2025-07-31 11:50:22,852] [INFO] task classification: Task1-3
+[2025-07-31 11:50:22,853] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 대덕1우의 2024-08-01 종가는?'}, {'task': 'Task1-1', 'question': '하이트진로2우B의 2024-09-24 저가은?'}, {'task': 'Task1-1', 'question': 'KG이니시스의 2024-07-17 종가는?'}, {'task': 'Task1-1', 'question': '케이씨에스의 2024-07-02 시가은?'}, {'task': 'Task1-3', 'question': '2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?'}]}
+[2025-07-31 11:50:31,745] [INFO] raw answer: import pandas as pd
+
+target_date = "2024-09-12"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')].copy()
+    close_only = close_data[date_cols].astype(float)
+
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:50:31,745] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-09-12"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')].copy()
+    close_only = close_data[date_cols].astype(float)
+
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:50:31,757] [INFO] 알테오젠
+[2025-07-31 11:53:51,359] [INFO] Starting call_clova!
+[2025-07-31 11:53:51,656] [INFO] Starting app...
+[2025-07-31 11:54:04,534] [INFO] question: 2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?
+[2025-07-31 11:54:05,650] [INFO] task classification: Task1-3
+[2025-07-31 11:54:05,650] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?'}]}
+[2025-07-31 11:54:16,017] [INFO] raw answer: import pandas as pd
+
+target_date = "2024-09-12"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].values[0]
+    print(f"{result} ({top_list['종가'].values[0]:,.0f}원)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:54:16,017] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-09-12"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].values[0]
+    print(f"{result} ({top_list['종가'].values[0]:,.0f}원)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:54:16,030] [INFO] 알테오젠 (316,000원)
+[2025-07-31 11:54:24,475] [INFO] question: 2025-04-30에서 KOSDAQ에서 하락률 높은 종목 5개는?
+[2025-07-31 11:54:25,357] [INFO] task classification: Task2-2
+[2025-07-31 11:54:25,357] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?'}, {'task': 'Task2-2', 'question': '2025-04-30에서 KOSDAQ에서 하락률 높은 종목 5개는?'}]}
+[2025-07-31 11:54:37,028] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-04-30"
+market = "KOSDAQ"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == market)].copy()
+close_only = close_data[date_cols].astype(float)
+
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 2]
+
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+close_data['하락률'] = ((close_data['이전종가'] - close_data['현재종가']) / close_data['이전종가']) * 100
+
+result = close_data.nlargest(5, '하락률')['종목명'].tolist()
+print(", ".join(result))
+[2025-07-31 11:54:37,029] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-04-30"
+market = "KOSDAQ"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price', 'Ticker', '시장', '종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == market)].copy()
+close_only = close_data[date_cols].astype(float)
+
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 2]
+
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+close_data['하락률'] = ((close_data['이전종가'] - close_data['현재종가']) / close_data['이전종가']) * 100
+
+result = close_data.nlargest(5, '하락률')['종목명'].tolist()
+print(", ".join(result))
+[2025-07-31 11:54:37,050] [INFO] 엑스큐어, 대호특수강우, 아이스크림에듀, 브릿지바이오테라퓨틱스, 넵튠
+[2025-07-31 11:54:49,590] [INFO] question: 2025-05-08에서 KOSDAQ에서 거래량 많은 종목 10개는?
+[2025-07-31 11:54:50,755] [INFO] task classification: Task1-3
+[2025-07-31 11:54:50,756] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?'}, {'task': 'Task2-2', 'question': '2025-04-30에서 KOSDAQ에서 하락률 높은 종목 5개는?'}, {'task': 'Task1-3', 'question': '2025-05-08에서 KOSDAQ에서 거래량 많은 종목 10개는?'}]}
+[2025-07-31 11:54:59,243] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-05-08"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:54:59,243] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-05-08"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:54:59,253] [INFO] 나우로보틱스, 메타바이오메드, 나무기술, 인성정보, 웹케시, 큐라티스, 고영, 포바이포, 오리엔트정공, 브릿지바이오테라퓨틱스
+[2025-07-31 11:55:06,606] [INFO] question: 2025-02-11에서 KOSDAQ에서 가장 비싼 종목 3개는?
+[2025-07-31 11:55:07,580] [INFO] task classification: Task1-3
+[2025-07-31 11:55:07,580] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?'}, {'task': 'Task2-2', 'question': '2025-04-30에서 KOSDAQ에서 하락률 높은 종목 5개는?'}, {'task': 'Task1-3', 'question': '2025-05-08에서 KOSDAQ에서 거래량 많은 종목 10개는?'}, {'task': 'Task1-3', 'question': '2025-02-11에서 KOSDAQ에서 가장 비싼 종목 3개는?'}]}
+[2025-07-31 11:55:16,159] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-02-11"
+top_n = 3
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:55:16,159] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-02-11"
+top_n = 3
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:55:16,169] [INFO] 레인보우로보틱스, 알테오젠, 파마리서치
+[2025-07-31 11:55:24,840] [INFO] question: 2025-06-11 KOSDAQ 시장에서 거래량이 가장 많은 종목은?"
+[2025-07-31 11:55:25,942] [INFO] task classification: Task1-3
+[2025-07-31 11:55:25,942] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-09-12 KOSDAQ 시장에서 가장 비싼 종목은?'}, {'task': 'Task2-2', 'question': '2025-04-30에서 KOSDAQ에서 하락률 높은 종목 5개는?'}, {'task': 'Task1-3', 'question': '2025-05-08에서 KOSDAQ에서 거래량 많은 종목 10개는?'}, {'task': 'Task1-3', 'question': '2025-02-11에서 KOSDAQ에서 가장 비싼 종목 3개는?'}, {'task': 'Task1-3', 'question': '2025-06-11 KOSDAQ 시장에서 거래량이 가장 많은 종목은?"'}]}
+[2025-07-31 11:55:34,442] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-06-11"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].values[0]
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:55:34,442] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-06-11"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].values[0]
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:55:34,452] [INFO] 이스트아시아홀딩스
+[2025-07-31 11:55:55,177] [INFO] question: 2024-10-09에서 KOSPI에서 가장 비싼 종목 3개는?
+[2025-07-31 11:56:01,159] [INFO] Starting call_clova!
+[2025-07-31 11:56:01,634] [INFO] Starting app...
+[2025-07-31 11:56:03,299] [INFO] question: 2024-10-09에서 KOSPI에서 가장 비싼 종목 3개는?
+[2025-07-31 11:56:04,246] [INFO] task classification: Task1-3
+[2025-07-31 11:56:04,246] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-10-09에서 KOSPI에서 가장 비싼 종목 3개는?'}]}
+[2025-07-31 11:56:12,988] [INFO] raw answer: import pandas as pd
+
+target_date = "2024-10-09"
+top_n = 3
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')].copy()
+    close_only = close_data[date_cols].astype(float)
+
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:56:12,988] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-10-09"
+top_n = 3
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')].copy()
+    close_only = close_data[date_cols].astype(float)
+
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:56:12,995] [INFO] 해당 날짜 데이터 없음
+[2025-07-31 11:56:20,799] [INFO] question: 2025-06-26 KOSPI 지수는?
+[2025-07-31 11:56:21,652] [INFO] task classification: Task1-2
+[2025-07-31 11:56:21,652] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-10-09에서 KOSPI에서 가장 비싼 종목 3개는?'}, {'task': 'Task1-2', 'question': '2025-06-26 KOSPI 지수는?'}]}
+[2025-07-31 11:56:31,183] [INFO] raw answer: import yfinance as yf
+import pandas as pd
+
+target_date = "2025-06-26"
+
+kospi = yf.Ticker("^KS11")
+
+df = kospi.history(period="2y")
+
+try:
+    close_price = df.loc[target_date]["Close"]
+    print(f"{close_price:.2f}")
+except:
+    print('해당 날짜에 존재하는 데이터가 없습니다.')
+[2025-07-31 11:56:31,183] [INFO] 
+
+cleaned code: import yfinance as yf
+import pandas as pd
+
+target_date = "2025-06-26"
+
+kospi = yf.Ticker("^KS11")
+
+df = kospi.history(period="2y")
+
+try:
+    close_price = df.loc[target_date]["Close"]
+    print(f"{close_price:.2f}")
+except:
+    print('해당 날짜에 존재하는 데이터가 없습니다.')
+[2025-07-31 11:56:32,242] [INFO] 3079.56
+[2025-07-31 11:56:41,752] [INFO] question: 퓨릿의 2024-10-04 등락률은?
+[2025-07-31 11:56:42,720] [INFO] task classification: Task1-1
+[2025-07-31 11:56:42,720] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-10-09에서 KOSPI에서 가장 비싼 종목 3개는?'}, {'task': 'Task1-2', 'question': '2025-06-26 KOSPI 지수는?'}, {'task': 'Task1-1', 'question': '퓨릿의 2024-10-04 등락률은?'}]}
+[2025-07-31 11:56:56,214] [INFO] raw answer: import pandas as pd
+
+ticker_name = "퓨릿"
+target_date = "2024-10-04"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+change_rate = ((close_data['현재종가'].iloc[0] / close_data['이전종가'].iloc[0]) - 1) * 100
+
+print(f"{change_rate:+.2f}%")
+[2025-07-31 11:56:56,214] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "퓨릿"
+target_date = "2024-10-04"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+change_rate = ((close_data['현재종가'].iloc[0] / close_data['이전종가'].iloc[0]) - 1) * 100
+
+print(f"{change_rate:+.2f}%")
+[2025-07-31 11:56:56,222] [INFO] -0.71%
+[2025-07-31 11:57:01,548] [INFO] question: 2024-07-11에서 KOSPI에서 거래량 많은 종목 10개는?
+[2025-07-31 11:57:03,194] [INFO] task classification: Task1-3
+[2025-07-31 11:57:03,194] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-10-09에서 KOSPI에서 가장 비싼 종목 3개는?'}, {'task': 'Task1-2', 'question': '2025-06-26 KOSPI 지수는?'}, {'task': 'Task1-1', 'question': '퓨릿의 2024-10-04 등락률은?'}, {'task': 'Task1-3', 'question': '2024-07-11에서 KOSPI에서 거래량 많은 종목 10개는?'}]}
+[2025-07-31 11:57:11,954] [INFO] raw answer: import pandas as pd
+
+target_date = "2024-07-11"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:57:11,954] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-07-11"
+top_n = 10
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:57:11,963] [INFO] 삼성전자, 대원전선, SG글로벌, 대한전선, 태양금속, 시프트업, 두산에너빌리티, 한온시스템, 에이프로젠, 한전산업
+[2025-07-31 11:57:23,305] [INFO] question: 2024-10-02 KOSPI 시장에서 가장 비싼 종목은?"
+[2025-07-31 11:57:24,817] [INFO] task classification: Task1-3
+[2025-07-31 11:57:24,817] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2024-10-09에서 KOSPI에서 가장 비싼 종목 3개는?'}, {'task': 'Task1-2', 'question': '2025-06-26 KOSPI 지수는?'}, {'task': 'Task1-1', 'question': '퓨릿의 2024-10-04 등락률은?'}, {'task': 'Task1-3', 'question': '2024-07-11에서 KOSPI에서 거래량 많은 종목 10개는?'}, {'task': 'Task1-3', 'question': '2024-10-02 KOSPI 시장에서 가장 비싼 종목은?"'}]}
+[2025-07-31 11:57:33,697] [INFO] raw answer: import pandas as pd
+
+target_date = "2024-10-02"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0]
+    print(f"{result} ({top_list['종가'].values[0]:,.0f}원)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:57:33,697] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-10-02"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSPI')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0]
+    print(f"{result} ({top_list['종가'].values[0]:,.0f}원)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:57:33,703] [INFO] 삼성바이오로직스 (977,000원)
+[2025-07-31 11:57:40,552] [INFO] question: KOSPI에서 삼정펄프의 2025-03-18 종가는?
+[2025-07-31 11:57:43,034] [INFO] Starting call_clova!
+[2025-07-31 11:57:43,330] [INFO] Starting app...
+[2025-07-31 11:57:44,932] [INFO] question: KOSPI에서 삼정펄프의 2025-03-18 종가는?
+[2025-07-31 11:57:45,931] [INFO] task classification: Task1-1
+[2025-07-31 11:57:45,931] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 삼정펄프의 2025-03-18 종가는?'}]}
+[2025-07-31 11:58:02,673] [INFO] raw answer: import pandas as pd
+
+ticker_name = "삼정펄프"
+target_date = "2025-03-18"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name) & (stock_data['시장'] == 'KOSPI')].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:58:02,674] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "삼정펄프"
+target_date = "2025-03-18"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name) & (stock_data['시장'] == 'KOSPI')].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:58:02,681] [INFO] 26,250원
+[2025-07-31 11:58:08,956] [INFO] question: 2025-05-07 KOSPI 시장에서 거래량이 가장 많은 종목은?
+[2025-07-31 11:58:09,735] [INFO] task classification: Task1-3
+[2025-07-31 11:58:09,735] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 삼정펄프의 2025-03-18 종가는?'}, {'task': 'Task1-3', 'question': '2025-05-07 KOSPI 시장에서 거래량이 가장 많은 종목은?'}]}
+[2025-07-31 11:58:19,297] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-05-07"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].iloc[0]
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:58:19,297] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-05-07"
+top_n = 1
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSPI')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(top_n)
+    result = top_list['종목명'].iloc[0]
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 11:58:19,307] [INFO] 대영포장
+[2025-07-31 11:58:25,212] [INFO] question: HD현대인프라코어의 2024-07-21 종가는?
+[2025-07-31 11:58:26,697] [INFO] task classification: Task1-1
+[2025-07-31 11:58:26,698] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'KOSPI에서 삼정펄프의 2025-03-18 종가는?'}, {'task': 'Task1-3', 'question': '2025-05-07 KOSPI 시장에서 거래량이 가장 많은 종목은?'}, {'task': 'Task1-1', 'question': 'HD현대인프라코어의 2024-07-21 종가는?'}]}
+[2025-07-31 11:58:32,792] [INFO] raw answer: import pandas as pd
+
+ticker_name = "HD현대인프라코어"
+target_date = "2024-07-21"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 11:58:32,792] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "HD현대인프라코어"
+target_date = "2024-07-21"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 12:01:20,346] [INFO] Starting call_clova!
+[2025-07-31 12:01:20,611] [INFO] Starting app...
+[2025-07-31 12:01:24,696] [INFO] question: HD현대인프라코어의 2024-07-21 종가는?
+[2025-07-31 12:01:26,214] [INFO] task classification: Task1-1
+[2025-07-31 12:01:26,214] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'HD현대인프라코어의 2024-07-21 종가는?'}]}
+[2025-07-31 12:01:32,529] [INFO] raw answer: import pandas as pd
+
+ticker_name = "HD현대인프라코어"
+target_date = "2024-07-21"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 12:01:32,529] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "HD현대인프라코어"
+target_date = "2024-07-21"
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+close_only = close_data[date_cols].astype(float)
+
+price = close_only[target_date].iloc[0]
+print(f"{price:,.0f}원")
+[2025-07-31 12:06:02,731] [INFO] Starting call_clova!
+[2025-07-31 12:06:03,031] [INFO] Starting app...
+[2025-07-31 12:06:15,787] [INFO] question: HD현대인프라코어의 2024-07-21 종가는?
+[2025-07-31 12:06:16,645] [INFO] task classification: Task1-1
+[2025-07-31 12:06:16,646] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'HD현대인프라코어의 2024-07-21 종가는?'}]}
+[2025-07-31 12:06:23,594] [INFO] raw answer: import pandas as pd
+
+ticker_name = "HD현대인프라코어"
+target_date = "2024-07-21"
+try:
+  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+  close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+  close_only = close_data[date_cols].astype(float)
+
+  price = close_only[target_date].iloc[0]
+  print(f"{price:,.0f}원")
+except:
+    print("해당 날짜에 존재하는 데이터가 없습니다.")
+[2025-07-31 12:06:23,594] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "HD현대인프라코어"
+target_date = "2024-07-21"
+try:
+  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+  close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+  close_only = close_data[date_cols].astype(float)
+
+  price = close_only[target_date].iloc[0]
+  print(f"{price:,.0f}원")
+except:
+    print("해당 날짜에 존재하는 데이터가 없습니다.")
+[2025-07-31 12:06:23,599] [INFO] 해당 날짜에 존재하는 데이터가 없습니다.
+[2025-07-31 12:06:29,924] [INFO] question: 2025-05-09 KOSDAQ 시장에서 거래량이 가장 많은 종목은?
+[2025-07-31 12:06:30,872] [INFO] task classification: Task1-3
+[2025-07-31 12:06:30,872] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'HD현대인프라코어의 2024-07-21 종가는?'}, {'task': 'Task1-3', 'question': '2025-05-09 KOSDAQ 시장에서 거래량이 가장 많은 종목은?'}]}
+[2025-07-31 12:06:40,674] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-05-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(1)
+    result = top_list['종목명'].item()
+    print(f"{result} ({top_list['거래량'].item()}주)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:06:40,674] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-05-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    volume_data = stock_data[(stock_data['Price'] == 'Volume') & (stock_data['시장'] == 'KOSDAQ')]
+    volume_only = volume_data[date_cols].astype(float)
+    
+    volume_data['거래량'] = volume_data[target_date]
+    top_list = volume_data.sort_values(by='거래량', ascending=False).head(1)
+    result = top_list['종목명'].item()
+    print(f"{result} ({top_list['거래량'].item()}주)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:06:40,685] [INFO] 우리로 (37729480.0주)
+[2025-07-31 12:06:44,830] [INFO] question: 코아스템켐온의 2024-08-15 종가는?
+[2025-07-31 12:06:45,639] [INFO] task classification: Task1-1
+[2025-07-31 12:06:45,639] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'HD현대인프라코어의 2024-07-21 종가는?'}, {'task': 'Task1-3', 'question': '2025-05-09 KOSDAQ 시장에서 거래량이 가장 많은 종목은?'}, {'task': 'Task1-1', 'question': '코아스템켐온의 2024-08-15 종가는?'}]}
+[2025-07-31 12:06:52,554] [INFO] raw answer: import pandas as pd
+
+ticker_name = "코아스템켐온"
+target_date = "2024-08-15"
+try:
+  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+  close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+  close_only = close_data[date_cols].astype(float)
+
+  price = close_only[target_date].iloc[0]
+  print(f"{price:,.0f}원")
+except:
+    print("해당 날짜에 존재하는 데이터가 없습니다.")
+[2025-07-31 12:06:52,554] [INFO] 
+
+cleaned code: import pandas as pd
+
+ticker_name = "코아스템켐온"
+target_date = "2024-08-15"
+try:
+  date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+  close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['종목명'] == ticker_name)].copy()
+  close_only = close_data[date_cols].astype(float)
+
+  price = close_only[target_date].iloc[0]
+  print(f"{price:,.0f}원")
+except:
+    print("해당 날짜에 존재하는 데이터가 없습니다.")
+[2025-07-31 12:06:52,558] [INFO] 해당 날짜에 존재하는 데이터가 없습니다.
+[2025-07-31 12:06:54,242] [INFO] question: 2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은?
+[2025-07-31 12:06:55,209] [INFO] task classification: Task4-1
+[2025-07-31 12:06:55,209] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'HD현대인프라코어의 2024-07-21 종가는?'}, {'task': 'Task1-3', 'question': '2025-05-09 KOSDAQ 시장에서 거래량이 가장 많은 종목은?'}, {'task': 'Task1-1', 'question': '코아스템켐온의 2024-08-15 종가는?'}, {'task': 'Task4-1', 'question': '2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은?'}]}
+[2025-07-31 12:06:55,209] [INFO] this is task4 question
+[2025-07-31 12:06:57,260] [INFO] Task4 clarification output: 원하시는 정보를 찾기 위해서는 "가장 비싼"의 기준을 명확히 해야 합니다. 해당 일자의 시가총액 기준으로 비싼 종목을 찾으시는지, 아니면 주가 기준으로 비싼 종목을 찾으시는지 알려주시면 그에 맞는 답변을 드리겠습니다.
+[2025-07-31 12:07:13,047] [INFO] question: 종가 기준으로
+[2025-07-31 12:07:14,655] [INFO] task classification: Task4-1
+[2025-07-31 12:07:14,655] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-1', 'question': 'HD현대인프라코어의 2024-07-21 종가는?'}, {'task': 'Task1-3', 'question': '2025-05-09 KOSDAQ 시장에서 거래량이 가장 많은 종목은?'}, {'task': 'Task1-1', 'question': '코아스템켐온의 2024-08-15 종가는?'}, {'task': 'Task4-1', 'question': '2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은?'}, {'task': 'Task4-1', 'question': '종가 기준으로'}]}
+[2025-07-31 12:07:14,655] [INFO] this is task4 question
+[2025-07-31 12:07:17,964] [INFO] Task4 clarification output: 네. 종가 기준으로 어떤 정보를 원하시는지 조금 더 구체적으로 말씀해 주시면 금융 데이터 분석 AI가 답변 드릴 수 있습니다. 
+
+예를 들어 "2023년 7월 1일 삼성전자의 종가는 얼마인가요?" 또는 "2023년 7월 한 달 동안 코스피 지수의 종가 평균은 얼마인가요?" 와 같이 질문을 구체화 해주시면 더욱 정확한 답변을 드릴 수 있습니다.
+[2025-07-31 12:07:49,734] [INFO] question: 2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은? 종가기준으로
+[2025-07-31 12:07:53,102] [INFO] question: [A[A[A
+[2025-07-31 12:07:58,662] [INFO] Starting call_clova!
+[2025-07-31 12:07:58,973] [INFO] Starting app...
+[2025-07-31 12:08:02,599] [INFO] question: 2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은? 종가기준으로
+[2025-07-31 12:08:03,583] [INFO] task classification: Task1-3
+[2025-07-31 12:08:03,583] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은? 종가기준으로'}]}
+[2025-07-31 12:08:12,964] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-01-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0] + " (" + str(top_list['종가'].values[0]) + "원)"
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:08:12,964] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-01-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0] + " (" + str(top_list['종가'].values[0]) + "원)"
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:08:12,972] [INFO] 알테오젠 (309000.0원)
+[2025-07-31 12:14:54,085] [INFO] Starting call_clova!
+[2025-07-31 12:14:54,396] [INFO] Starting app...
+[2025-07-31 12:14:57,954] [INFO] question: 2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은? 종가기준으로
+[2025-07-31 12:14:59,428] [INFO] task classification: Task1-3
+[2025-07-31 12:14:59,429] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은? 종가기준으로'}]}
+[2025-07-31 12:15:08,744] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-01-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0] + " (" + str(top_list['종가'].values[0]) + "원)"
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:15:08,744] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-01-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0] + " (" + str(top_list['종가'].values[0]) + "원)"
+    print(result)
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:15:08,753] [INFO] 알테오젠 (309000.0원)
+[2025-07-31 12:15:12,566] [INFO] question:  2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은?
+[2025-07-31 12:15:13,648] [INFO] task classification: Task1-3
+[2025-07-31 12:15:13,649] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task1-3', 'question': '2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은? 종가기준으로'}, {'task': 'Task1-3', 'question': ' 2025-01-09 KOSDAQ 시장에서 가장 비싼 종목은?'}]}
+[2025-07-31 12:15:22,949] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-01-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0], top_list['종가'].values[0]
+    print(f"{result[0]} ({result[1]:,.0f}원)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:15:22,949] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-01-09"
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(1)
+    result = top_list['종목명'].values[0], top_list['종가'].values[0]
+    print(f"{result[0]} ({result[1]:,.0f}원)")
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:15:22,960] [INFO] 알테오젠 (309,000원)
+[2025-07-31 12:15:31,834] [INFO] Starting call_clova!
+[2025-07-31 12:15:32,166] [INFO] Starting app...
+[2025-07-31 12:15:35,535] [INFO] question: 가장 비싼 종목이 뭐야
+[2025-07-31 12:15:36,679] [INFO] task classification: Task4-2
+[2025-07-31 12:15:36,679] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '가장 비싼 종목이 뭐야'}]}
+[2025-07-31 12:15:36,679] [INFO] this is task4 question
+[2025-07-31 12:15:38,306] [INFO] Task4 clarification output: 어떤 날짜를 기준으로 가장 비싼 종목을 찾기를 원하시는지 알려주시면 그에 맞는 답변을 드릴 수 있습니다.
+[2025-07-31 12:15:48,983] [INFO] question: 2025년 5월 1일 기준으로 쫌!
+[2025-07-31 12:15:50,100] [INFO] task classification: Task1-3
+[2025-07-31 12:15:50,100] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '가장 비싼 종목이 뭐야'}, {'task': 'Task1-3', 'question': '2025년 5월 1일 기준으로 쫌!'}]}
+[2025-07-31 12:16:05,922] [INFO] Starting call_clova!
+[2025-07-31 12:16:06,246] [INFO] Starting app...
+[2025-07-31 12:18:15,109] [INFO] Starting call_clova!
+[2025-07-31 12:18:15,457] [INFO] Starting app...
+[2025-07-31 12:18:26,383] [INFO] question: 제일 비싼 종목이 뭐야ㅐ
+[2025-07-31 12:18:27,200] [INFO] task classification: Task4-2
+[2025-07-31 12:18:27,200] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '제일 비싼 종목이 뭐야ㅐ'}]}
+[2025-07-31 12:18:27,200] [INFO] this is task4 question
+[2025-07-31 12:18:29,057] [INFO] Task4 clarification output: 어떤 날짜를 기준으로 제일 비싼 종목을 찾기를 원하시는지요? 그리고 어느 시장 또는 어떤 섹터의 종목을 찾으시나요? 이에 대한 정보를 주시면 원하시는 답변을 드릴 수 있습니다.
+[2025-07-31 12:18:48,967] [INFO] question: 그냥 2025년 1월 9일에 코스닥에서
+[2025-07-31 12:18:50,607] [INFO] task classification: Task4-2
+[2025-07-31 12:18:50,608] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '제일 비싼 종목이 뭐야ㅐ'}, {'task': 'Task4-2', 'question': '그냥 2025년 1월 9일에 코스닥에서'}]}
+[2025-07-31 12:18:50,608] [INFO] this is task4 question
+[2025-07-31 12:18:54,574] [INFO] Task4 clarification output: 코스닥에서 어떤 정보를 원하시는지 명확하지 않습니다. 
+
+원하시는 정보 종류를 선택해 주시면 그에 맞는 자세한 도움을 드릴 수 있습니다. 아래는 가능한 질문 예시입니다.
+
+- "2025년 1월 9일 코스닥 지수는 얼마인가요?"
+- "2025년 1월 9일 코스닥에서 시가총액 상위 5개 종목은 무엇인가요?"
+- "2023년 1월 9일부터 2025년 1월 9일까지 코스닥 지수의 변동 추이를 보여주세요."
+[2025-07-31 12:19:34,891] [INFO] Starting call_clova!
+[2025-07-31 12:19:35,198] [INFO] Starting app...
+[2025-07-31 12:19:39,366] [INFO] question: 제일 비싼 종목이 뭐야
+[2025-07-31 12:19:39,366] [INFO] 제일 비싼 종목이 뭐야
+[2025-07-31 12:19:40,397] [INFO] task classification: Task4-2
+[2025-07-31 12:19:40,397] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '제일 비싼 종목이 뭐야'}]}
+[2025-07-31 12:19:40,397] [INFO] this is task4 question
+[2025-07-31 12:19:41,406] [INFO] Task4 clarification output: 어떤 날짜를 기준으로 제일 비싼 종목을 찾으시는지 알 수 있을까요?
+[2025-07-31 12:20:00,344] [INFO] question: 2025년 1월 9일 코스닥
+[2025-07-31 12:20:00,345] [INFO] [현재질문]제일 비싼 종목이 뭐야
+2025년 1월 9일 코스닥
+[2025-07-31 12:20:01,619] [INFO] task classification: Task1-3
+[2025-07-31 12:20:01,619] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '제일 비싼 종목이 뭐야'}, {'task': 'Task1-3', 'question': '2025년 1월 9일 코스닥'}]}
+[2025-07-31 12:20:09,985] [INFO] raw answer: import pandas as pd
+
+target_date = "2025-01-09"
+top_n = 3
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:20:09,985] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2025-01-09"
+top_n = 3
+
+try:
+    date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+    close_data = stock_data[(stock_data['Price'] == 'Close') & (stock_data['시장'] == 'KOSDAQ')]
+    close_only = close_data[date_cols].astype(float)
+    
+    close_data['종가'] = close_data[target_date]
+    top_list = close_data.sort_values(by='종가', ascending=False).head(top_n)
+    result = top_list['종목명'].tolist()
+    print(", ".join(result))
+except KeyError:
+    print("해당 날짜 데이터 없음")
+[2025-07-31 12:20:09,996] [INFO] 알테오젠, 휴젤, 파마리서치
+[2025-07-31 12:20:29,519] [INFO] question: 거기서 가장 비싼건 뭔데
+[2025-07-31 12:20:29,519] [INFO] [이전질문]
+2025년 1월 9일 코스닥
+[현재질문]제일 비싼 종목이 뭐야
+거기서 가장 비싼건 뭔데
+[2025-07-31 12:20:30,370] [INFO] task classification: Task4-2
+[2025-07-31 12:20:30,371] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '제일 비싼 종목이 뭐야'}, {'task': 'Task1-3', 'question': '2025년 1월 9일 코스닥'}, {'task': 'Task4-2', 'question': '거기서 가장 비싼건 뭔데'}]}
+[2025-07-31 12:20:30,371] [INFO] this is task4 question
+[2025-07-31 12:20:32,944] [INFO] Task4 clarification output: 가장 비싼 것이 어떤 것을 의미하는지 잘 모르겠습니다. 
+
+종목 이름을 말씀하시는 건가요? 아니면 시장 지수나 상품을 말씀하시는 건가요? 그리고 어느 날짜를 기준으로 해야 할까요? 추가적인 정보를 제공해 주신다면 더욱 정확한 답변을 드릴 수 있을 것 같습니다.
+[2025-07-31 12:22:46,283] [INFO] question: 2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘
+[2025-07-31 12:22:46,284] [INFO] 2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘
+[2025-07-31 12:22:46,297] [ERROR] call clova Error intention: 401 {"status":{"code":"40104","message":"Invalid Key - Please use new API Key that starts with 'nv-*'."}}
+[2025-07-31 12:22:46,297] [INFO] task classification: call_clova에서 오류가 발생했습니다.
+[2025-07-31 12:22:46,298] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '제일 비싼 종목이 뭐야'}, {'task': 'Task1-3', 'question': '2025년 1월 9일 코스닥'}, {'task': 'Task4-2', 'question': '거기서 가장 비싼건 뭔데'}], '1234': [{'task': 'call_clova에서 오류가 발생했습니다.', 'question': '2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘'}]}
+[2025-07-31 12:23:26,102] [INFO] question: 2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘
+[2025-07-31 12:23:26,103] [INFO] [이전질문]
+2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘
+[현재질문]2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘
+[2025-07-31 12:23:26,912] [INFO] task classification: Task2-2
+[2025-07-31 12:23:26,912] [INFO] {'example id': [['Task4-1', '안녕하세요?'], ['Task4-1', 'kospi 시장에서 상승 종목 수'], ['Task1-1', '2024년 1월 18일에 KOSPI 시장에서 상승한 종목 수는? ']], '1': [{'task': 'Task4-2', 'question': '제일 비싼 종목이 뭐야'}, {'task': 'Task1-3', 'question': '2025년 1월 9일 코스닥'}, {'task': 'Task4-2', 'question': '거기서 가장 비싼건 뭔데'}], '1234': [{'task': 'call_clova에서 오류가 발생했습니다.', 'question': '2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘'}, {'task': 'Task2-2', 'question': '2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘'}]}
+[2025-07-31 12:23:38,913] [INFO] raw answer: import pandas as pd
+
+target_date = "2024-07-18"
+threshold = 5
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[stock_data['Price'] == 'Close'].copy()
+close_only = close_data[date_cols].astype(float)
+
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+close_data['등락률'] = ((close_data['현재종가'] / close_data['이전종가']) - 1) * 100
+
+filtered = close_data[close_data['등락률'] >= threshold].sort_values(by='등락률', ascending=False)
+result = filtered['종목명'].tolist()
+print(", ".join(result))
+[2025-07-31 12:23:38,913] [INFO] 
+
+cleaned code: import pandas as pd
+
+target_date = "2024-07-18"
+threshold = 5
+
+date_cols = [c for c in stock_data.columns if c not in ['Price','Ticker','시장','종목명']]
+close_data = stock_data[stock_data['Price'] == 'Close'].copy()
+close_only = close_data[date_cols].astype(float)
+
+prev_date = pd.to_datetime(target_date) - pd.Timedelta(days=1)
+prev_date = prev_date.strftime('%Y-%m-%d')
+if prev_date not in close_only.columns:
+    prev_date = close_only.columns[close_only.columns.get_loc(target_date) - 1]
+
+close_data['현재종가'] = close_data[target_date]
+close_data['이전종가'] = close_data[prev_date]
+close_data['등락률'] = ((close_data['현재종가'] / close_data['이전종가']) - 1) * 100
+
+filtered = close_data[close_data['등락률'] >= threshold].sort_values(by='등락률', ascending=False)
+result = filtered['종목명'].tolist()
+print(", ".join(result))
+[2025-07-31 12:23:38,925] [INFO] DXVX, 엑스큐어, 샤페론, 화성밸브, 유틸렉스, 엑시콘, 한전산업, 바이온, 이노룰스, GS글로벌, 포커스에이아이, 메디콕스, 빛과전자, 나이벡, 에넥스, 동방, 압타바이오, 아이엠비디엑스, 아나패스, 피코그램, 코츠테크놀로지, 녹십자웰빙, 오로스테크놀로지, 레몬, 네오셈, 플레이그램, 삼아제약, 유니온머티리얼, 한전기술, 에이프로젠바이오로직스, 올릭스, FSN, 코스나인, 애경산업, 브릿지바이오테라퓨틱스, 세아메카닉스, 우리바이오, 세아제강지주, 아이티센글로벌, 포스코인터내셔널, 한국석유, 신풍, 웨이브일렉트로, 스피어, 서울바이오시스

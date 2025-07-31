@@ -38,25 +38,48 @@ async def get_answer(
 
         ### 이전 대화내용 복구
         if request_id in request_uuids:
-            last_questions = request_uuids[request_id]
-            if len(last_questions) >= 5:
-                return JSONResponse(content={
-            "answer": '질문개수가 5개를 초과하였습니다'
-            })
+            session_history = request_uuids[request_id]
+            if len(session_history) >= 5:   # 5턴 제한
+                return JSONResponse(content={"answer": "대화가 너무 길어졌습니다. 다시 질문해주세요."})
+            # 과거 대화 + 현재 질문 합치기
+            prev_questions = []
+            ambiguous_questions = []
+
+            for s in session_history:
+                if s['task'].startswith('Task4'):
+                    ambiguous_questions.append(s['question'])
+                else:
+                    prev_questions.append(s['question'])
+
+            # 텍스트 조립
+            prev_texts = '[이전질문]\n' + "\n".join(prev_questions) if prev_questions else ''
+            ambiguous_part = "\n".join(ambiguous_questions)
+
+            # 최종 현재 질문
+            if ambiguous_part:
+                full_question = f"{ambiguous_part}\n{question}"
             else:
-                question = "\n".join(last_questions) + "\n" + '[질문]' + question
+                full_question = question
+
+            # 전체 input 구성
+            added_question = f"{prev_texts}\n[현재질문]{full_question}" if prev_texts else f"[현재질문]{full_question}"
+        else:
+            added_question = question
+
+        logger.info(added_question)
         
         classification_answer = call_clova.call_clova_find_intention(
-            question,
+            added_question,
             api_key=authorization,
             request_id=request_id
         )
         logger.info(f'task classification: {classification_answer}')
         ##저장
         if request_id in request_uuids:
-            request_uuids[request_id].append([f"{classification_answer}",question])
+            request_uuids[request_id].append({"task": classification_answer, "question": question})
         else:
-            request_uuids[request_id] = [f"{classification_answer}",question]
+            request_uuids[request_id] = [{"task": classification_answer, "question": question}]
+
         #logger
         logger.info(request_uuids)
             
