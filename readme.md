@@ -75,40 +75,46 @@ base_url = 'http://49.50.129.227:8000/'
 - **Headers:**
   - `Authorization` – 하이퍼클로바 LLM API 키 (예: `Bearer <YOUR-CLOVA-API-KEY>`)
   - `X-NCP-CLOVASTUDIO-REQUEST-ID` – 요청 고유 ID (UUID 권장) (선택, 기본값 None) (task 5의 멀티턴에 대해서만 사용됨.)
-- **Response:**
+### Response:
 ```json
 {
   "answer": "질의 결과 또는 재질문",
-  "request_id": id (멀티턴 시 입력값에 사용됨)
-}'''
+  "request_id": "id (멀티턴 시 입력값에 사용됨)"
+}
+```
+
 ### 예시 요청 (Example Request)
-'''python
+
+#### ✅ curl
+```bash
 curl -G "http://49.50.129.227:8000/" \
   --data-urlencode "question=2024-07-18에 등락률이 +5% 이상인 종목을 모두 보여줘" \
   -H "Authorization: Bearer <YOUR-CLOVA-API-KEY>" \
   -H "X-NCP-CLOVASTUDIO-REQUEST-ID: 1234"
-'''
+```
 
-###python
-'''python
+#### ✅ Python
+```python
+import requests
+
 url = "http://49.50.129.227:8000/"
 params = {
     "question": question
 }
 headers = {
-    "Authorization": "Bearer <YOUR-CLOVA-API-KEY>"  # 실제 API 키 입력
-    // ,"X-NCP-CLOVASTUDIO-REQUEST-ID": '1'  멀티턴의 경우 request_id 추가
+    "Authorization": "Bearer <YOUR-CLOVA-API-KEY>",
+    # "X-NCP-CLOVASTUDIO-REQUEST-ID": "1"  # 멀티턴 시 request_id 사용
 }
 response = requests.get(url, params=params, headers=headers)
-'''
+```
 
-### 예시 응답 (Example Response)
-'''json
+### 예시 응답
+```json
 {
   "answer": "DXVX, 엑스큐어, 샤페...",
-  "request_id": '2'
+  "request_id": "2"
 }
-'''
+```
 
 
 ## task5: 멀티턴
