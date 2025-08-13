@@ -14,7 +14,7 @@ params = {
 
 # 4. 헤더 정보
 headers = {
-    "Authorization": "Bearer nv-bf23d32f4c3e41dea18865abcc2f2e4f75WU"
+    "Authorization": "Bearer your id"
     #"X-NCP-CLOVASTUDIO-REQUEST-ID": '4'  # 멀티턴 request id 입력
 }
 
